@@ -30,6 +30,83 @@
     }
     #continueBtn:hover { background-color: #218838; }
     #timeContainer { margin-top: 20px; }
+
+    /* Custom calendar styling to match the second screenshot */
+    .flatpickr-calendar {
+      background: transparent;
+      box-shadow: none;
+      width: 100%;
+    }
+    .flatpickr-month {
+      color: white;
+      height: 40px;
+      margin-bottom: 10px;
+    }
+    .flatpickr-weekdays {
+      background-color: transparent;
+      border-bottom: none;
+    }
+    .flatpickr-weekday {
+      color: white;
+    }
+    .flatpickr-day {
+      color: white;
+      border: none;
+      max-width: none;
+      height: 40px;
+      line-height: 40px;
+    }
+    .flatpickr-day:hover {
+      background: #007BFF;
+    }
+    .flatpickr-day.selected {
+      background: #007BFF;
+      border-color: #007BFF;
+    }
+    .flatpickr-day.inRange {
+      box-shadow: none;
+      background: rgba(0, 123, 255, 0.2);
+    }
+    .flatpickr-months .flatpickr-month {
+      height: 40px;
+    }
+    .flatpickr-current-month {
+      padding-top: 0;
+    }
+    .flatpickr-current-month .flatpickr-monthDropdown-months {
+      appearance: none;
+      background: transparent;
+      color: white;
+      border: none;
+      font-size: 16px;
+    }
+    .flatpickr-current-month input.cur-year {
+      color: white;
+      font-size: 16px;
+    }
+    .flatpickr-prev-month, .flatpickr-next-month {
+      color: white;
+      fill: white;
+    }
+    .flatpickr-prev-month:hover, .flatpickr-next-month:hover {
+      color: #007BFF;
+      fill: #007BFF;
+    }
+    .dayContainer {
+      width: 100%;
+      min-width: 100%;
+    }
+    .flatpickr-innerContainer {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .flatpickr-rContainer {
+      width: 100%;
+    }
+    .flatpickr-days {
+      width: 100%;
+    }
   </style>
 </head>
 <body>
@@ -62,7 +139,7 @@
   }
 
   // Генерация временных слотов (09:00 - 18:00, с шагом 15 минут)
-  function getAllTimeSlots(start = 9, end = 18, interval = 15) {
+  function getAllTimeSlots(start = 9, end = 21, interval = 60) {
     const times = [];
     for (let h = start; h < end; h++) {
       for (let m = 0; m < 60; m += interval) {
