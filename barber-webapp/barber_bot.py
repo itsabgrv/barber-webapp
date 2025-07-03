@@ -32,13 +32,13 @@ async def setup_webapp_menu_button(app):
     await app.bot.set_chat_menu_button(
         menu_button=MenuButtonWebApp(
             text="💈 Записаться",
-            web_app=WebAppInfo(url="https://barber-webapp.vercel.app/")
+            web_app=WebAppInfo(url="https://barber-indol-iota.vercel.app/")
         )
     )
 
 # Запуск
 def main():
-    TOKEN = "ВАШ_ТОКЕН_ОТ_BOTFATHER"
+    TOKEN = "8112562910:AAHXA_yu1OEB-JG3Lzdxje0g8-LWyprOslI"
     app = ApplicationBuilder().token(TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
