@@ -126,10 +126,104 @@
     .continue-button.show {
       display: block;
     }
+    .header-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: black;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-decoration: none;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .branch-button {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-grow: 1;
+            background: #f5f5f5;
+
+            border-radius: 12px;
+            padding: 12px 16px;
+            cursor: pointer;
+
+            text-decoration: none;
+            color: inherit;
+            min-height: 60px;
+        }
+
+        .branch-info-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .branch-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #e74c3c;
+            display: flex;
+            color: white;
+          background-image: url("images/llogo.jpg");
+        }
+
+        .branch-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .branch-name {
+            font-weight: bold;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .branch-address {
+            font-size: 14px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .arrow-down {
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid #666;
+            margin-left: 10px;
+        }
+                .back-button:hover {
+            background-color: #e0e0e0;
+        }
   </style>
 </head>
 <body>
-  <a href="almaty_abai.html" class="back-button">← Назад</a>
+  <div class="header-container">
+        <button class="back-button" onclick="history.back()">←</button>
+        <a href="almaty_filial.html" class="branch-button">
+            <div class="branch-info-container">
+                <div class="branch-logo"></div>
+                <div class="branch-text">
+                    <div class="branch-name">BROS & BLADES АL</div>
+                    <div class="branch-address">ул. Абая дом 10</div>
+                </div>
+            </div>
+            <span class="arrow-down"></span>
+        </a>
+  </div>
   <h2>Выберите специалиста</h2>
 
   <div class="specialist-card" onclick="selectSpecialist(this, 'Специалист 1')">
@@ -179,6 +273,7 @@
       selectedSpecialist = specialist;
 
       document.getElementById('continueButton').classList.add('show');
+
     }
 
     document.getElementById('continueButton').addEventListener('click', function() {

@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Выбрать услугу</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 16px;
+      background-color: #f5f5f5;
+    }
+
+    .header-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .back-button {
+      display: inline-block;
+      padding: 8px 16px;
+      background-color: black;
+      border: none;
+      border-radius: 20px;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      text-decoration: none;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .back-button:hover {
+      background-color: #333;
+    }
+
+    .branch-button {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-grow: 1;
+      background: #f5f5f5;
+      border-radius: 12px;
+      padding: 12px 16px;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      min-height: 60px;
+    }
+
+    .branch-info-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .branch-logo {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: #e74c3c;
+      display: flex;
+      color: white;
+      background-image: url("images/llogo.jpg");
+    }
+
+    .branch-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .branch-name {
+      font-weight: bold;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .branch-address {
+      font-size: 14px;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    .arrow-down {
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 8px solid #666;
+      margin-left: 10px;
+    }
+
+    h3 {
+      margin: 20px 0 10px 0;
+      color: #333;
+    }
+
+    /* Booking info styles */
+    .booking-info {
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .booking-info-item {
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .booking-info-item strong {
+      color: #333;
+    }
+
+    /* Service card styles */
+    .service-card {
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .service-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .service-title {
+      font-weight: bold;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .service-duration {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .service-description {
+      color: #666;
+      font-size: 14px;
+      line-height: 1.4;
+      margin-bottom: 12px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .service-description.expanded {
+      display: block;
+      -webkit-line-clamp: unset;
+    }
+
+    .service-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .read-more {
+      color: #e74c3c;
+      font-size: 14px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+
+    .price {
+      font-weight: bold;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .select-button {
+      background: none;
+      border: 1px solid black;
+      color: black;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .select-button:hover {
+      background-color: black;
+      color: white;
+    }
+
+    .select-button.selected {
+      background-color: black;
+      color: white;
+    }
+
+    /* Selected services summary */
+    .selected-services-summary {
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      display: none;
+    }
+
+    .selected-service {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .total-price {
+      font-weight: bold;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #e0e0e0;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Continue button */
+    .continue-button {
+      width: 100%;
+      padding: 12px;
+      background-color: black;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 16px;
+      transition: all 0.3s;
+      display: none;
+    }
+
+    .continue-button:hover {
+      background-color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="header-container">
+    <button class="back-button" onclick="history.back()">←</button>
+    <a href="almaty_filial.html" class="branch-button">
+      <div class="branch-info-container">
+        <div class="branch-logo"></div>
+        <div class="branch-text">
+          <div class="branch-name">BROS & BLADES АL</div>
+          <div class="branch-address">ул. Абая дом 10</div>
+        </div>
+      </div>
+      <span class="arrow-down"></span>
+    </a>
+  </div>
+
+  <h3>Выбрать услугу</h3>
+
+  <div class="booking-info" id="bookingInfo">
+    <div class="booking-info-item">Специалист: <strong id="infoSpecialist">не указано</strong></div>
+    <div class="booking-info-item">Дата: <strong id="infoDate">не указано</strong></div>
+    <div class="booking-info-item">Время: <strong id="infoTime">не указано</strong></div>
+  </div>
+
+  <div id="servicesContainer">
+    <!-- Услуги будут добавлены через JavaScript -->
+  </div>
+
+  <div class="selected-services-summary" id="selectedServicesSummary">
+    <h4>Выбранные услуги:</h4>
+    <div id="selectedServicesList"></div>
+    <div class="total-price">
+      <span>Итого:</span>
+      <span id="totalPrice">0 ₸</span>
+    </div>
+  </div>
+
+  <button class="continue-button" id="continueButton">Готово</button>
+
+  <script>
+    // Массив услуг
+    const services = [
+      {
+        id: 1,
+        title: "Мужская стрижка",
+        duration: "1 ч",
+        description: "Стрижка выполняется с помощью ножниц и машинок, отлично подойдет обладателям коротких волос. Услуга включает в себя мытье головы до и после стрижки, укладку с применением профессиональных стайлинговых средств.",
+        price: 4100
+      },
+      {
+        id: 2,
+        title: "Стрижка машинкой",
+        duration: "15 мин",
+        description: "Стрижка выполняется исключительно машинкой с использованием 1 насадки. Услуга включает в себя мытье головы до и после стрижки. Стрижка по технологии Fade не относится к данной услуге.",
+        price: 2500
+      },
+      {
+        id: 3,
+        title: "Оформление бороды",
+        duration: "30 мин",
+        description: "Создание формы бороды и четких контуров или гладкое бритьё. Услуга может включать в себя распаривание с использованием эфирных масел, легкий массаж лица, охлаждающий компресс.",
+        price: 3000
+      },
+      {
+        id: 4,
+        title: "Королевское бритье",
+        duration: "40 мин",
+        description: "Быстрая и аккуратная стрижка с использованием профессиональных машинок. Подходит для тех, кто предпочитает короткие стрижки.",
+        price: 3500
+      },
+      {
+        id: 5,
+        title: "Укладка",
+        duration: "15 мин",
+        description: "Быстрая и аккуратная стрижка с использованием профессиональных машинок. Подходит для тех, кто предпочитает короткие стрижки.",
+        price: 2000
+      },
+      {
+        id: 6,
+        title: "Детская стрижка",
+        duration: "45 мин",
+        description: "Услуга для настоящих ценительниц мужского FADE! Выполняется исключительно по мужской технике стрижки на основе FADE (экстракороткая стрижка с переходом длин от голой кожи до 6мм. в зоне затылка и висков) Услуга включает в себя мытье головы до и после стрижки, укладку с применением профессиональных стайлинговых средств",
+        price: 3000
+      },
+      {
+        id: 7,
+        title: "Камуфляж седины",
+        duration: "40 мин",
+        description: "Мы используем лучшие средства для тонирования твоей бороды и волос, что позволяет им выглядеть естественно.",
+        price: 4500
+      },
+      {
+        id: 8,
+        title: "Комплекс 'Все включено'",
+        duration: "1 час",
+        description: "Еще больше пользы с углубленным уходом за кожей головы! В данной услуге вы получите максимальную пользу благодаря дополнительным этапам ухода – очищение, профилактика выпадения волос, питание и увлажнение! Вам — приятно, волосам — полезно!",
+        price: 7000
+      }
+    ];
+
+    // Массив для хранения выбранных услуг
+    let selectedServices = [];
+
+    // Функция для отображения услуг
+    function renderServices() {
+      const container = document.getElementById('servicesContainer');
+      container.innerHTML = '';
+
+      services.forEach(service => {
+        const card = document.createElement('div');
+        card.className = 'service-card';
+        card.innerHTML = `
+          <div class="service-header">
+            <span class="service-title">${service.title}</span>
+            <span class="service-duration">${service.duration}</span>
+          </div>
+          <div class="service-description" id="desc${service.id}">
+            ${service.description}
+          </div>
+          <div class="service-footer">
+            <button class="read-more" onclick="toggleDescription('desc${service.id}', this)">ещё</button>
+            <span class="price">${service.price.toLocaleString()} ₸</span>
+            <button class="select-button" onclick="toggleServiceSelection(${service.id}, this)">
+              ${selectedServices.some(s => s.id === service.id) ? 'Отменить' : 'Выбрать'}
+            </button>
+          </div>
+        `;
+
+        // Добавляем класс selected, если услуга уже выбрана
+        const selectButton = card.querySelector('.select-button');
+        if (selectedServices.some(s => s.id === service.id)) {
+          selectButton.classList.add('selected');
+        }
+
+        container.appendChild(card);
+      });
+    }
+
+    // Функция для переключения описания
+    function toggleDescription(id, button) {
+      const desc = document.getElementById(id);
+      desc.classList.toggle('expanded');
+
+      if (desc.classList.contains('expanded')) {
+        button.textContent = 'скрыть';
+      } else {
+        button.textContent = 'ещё';
+      }
+    }
+
+    // Функция для выбора/отмены выбора услуги
+    function toggleServiceSelection(serviceId, button) {
+      const service = services.find(s => s.id === serviceId);
+
+      // Проверяем, выбрана ли уже эта услуга
+      const index = selectedServices.findIndex(s => s.id === serviceId);
+
+      if (index === -1) {
+        // Добавляем услугу
+        selectedServices.push(service);
+        button.textContent = 'Отменить';
+        button.classList.add('selected');
+      } else {
+        // Удаляем услугу
+        selectedServices.splice(index, 1);
+        button.textContent = 'Выбрать';
+        button.classList.remove('selected');
+      }
+
+      // Обновляем список выбранных услуг и итоговую сумму
+      updateSelectedServicesSummary();
+
+      // Показываем/скрываем кнопку "Продолжить" в зависимости от количества выбранных услуг
+      const continueButton = document.getElementById('continueButton');
+      const summary = document.getElementById('selectedServicesSummary');
+
+      if (selectedServices.length > 0) {
+        continueButton.style.display = 'block';
+        summary.style.display = 'block';
+      } else {
+        continueButton.style.display = 'none';
+        summary.style.display = 'none';
+      }
+    }
+
+    // Функция для обновления списка выбранных услуг и итоговой суммы
+    function updateSelectedServicesSummary() {
+      const listContainer = document.getElementById('selectedServicesList');
+      const totalPriceElement = document.getElementById('totalPrice');
+
+      listContainer.innerHTML = '';
+
+      let totalPrice = 0;
+
+      selectedServices.forEach(service => {
+        const serviceElement = document.createElement('div');
+        serviceElement.className = 'selected-service';
+        serviceElement.innerHTML = `
+          <span>${service.title}</span>
+          <span>${service.price.toLocaleString()} ₸</span>
+        `;
+        listContainer.appendChild(serviceElement);
+
+        totalPrice += service.price;
+      });
+
+      totalPriceElement.textContent = `${totalPrice.toLocaleString()} ₸`;
+    }
+
+    // Функция для перехода к следующему шагу
+    function continueToNextStep() {
+      // Сохраняем выбранные услуги в localStorage
+      const urlParams = new URLSearchParams(window.location.search);
+      const bookingData = {
+        branch: "BROS & BLADES AL - ул. Абая дом 10",
+        date: urlParams.get("date"),
+        time: urlParams.get("time"),
+        specialist: urlParams.get("specialist"),
+        specialistId: urlParams.get("specialistId"),
+        services: selectedServices,
+        totalPrice: selectedServices.reduce((sum, service) => sum + service.price, 0)
+      };
+
+      localStorage.setItem('currentBooking', JSON.stringify(bookingData));
+
+      // Переходим на страницу подтверждения
+      window.location.href = 'confirmation.html';
+    }
+
+    // Инициализация
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const specialist = urlParams.get("specialist");
+      const date = urlParams.get("date");
+      const time = urlParams.get("time");
+
+      // Отобразим в интерфейсе
+      document.getElementById('infoSpecialist').textContent = specialist || 'не указано';
+      document.getElementById('infoDate').textContent = date || 'не указано';
+      document.getElementById('infoTime').textContent = time || 'не указано';
+
+      renderServices();
+
+      document.getElementById('continueButton').addEventListener('click', continueToNextStep);
+
+      const savedBooking = localStorage.getItem('currentBooking');
+      if (savedBooking) {
+        const booking = JSON.parse(savedBooking);
+        if (booking.services && booking.services.length > 0) {
+          selectedServices = booking.services;
+          updateSelectedServicesSummary();
+          renderServices();
+
+          document.getElementById('continueButton').style.display = 'block';
+          document.getElementById('selectedServicesSummary').style.display = 'block';
+        }
+      }
+    });
+  </script>
+</body>
+</html>

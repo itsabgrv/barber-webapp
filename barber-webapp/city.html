@@ -40,43 +40,41 @@
       font-size: 16px;
       color: #333;
     }
-           .menu-button {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 65px;
-            width: 100%;
-            padding: 14px 16px;
-            margin-bottom: 10px;
-            font-size: 16px;
-            background: #ffffff;
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
+    .city-filial{
+        color: #666666;
+        font-size: 12px;
+        margin-left: 10px;
+    }
+            .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            margin-bottom: 20px;
+            background-color: black;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-            color: black;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            color: white;
         }
 
-        .menu-button:hover {
-            background-color: #f9f9f9;
-        }
-
-        .arrow-down {
-            width: 0;
-            height: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-top: 6px solid #666;
+        .back-button:hover {
+            background-color: #333;
         }
   </style>
 </head>
 <body>
-<h3>Где?</h3>
-<button class="menu-button" onclick="location.href='city.html'">
-    <span class="left-content">
-        <span>Выбрать город</span>
-    </span>
-    <span class="arrow-down"></span>
-</button>
+<button class="back-button" onclick="history.back()">←</button>
+
+  <div class="city-card" onclick="location.href='almaty_filial.html'">
+    <span class="city-name">Алматы</span>
+      <span class="city-filial">2 филиала</span>
+
+  </div>
+
+  <div class="city-card" onclick="location.href='astana.html'">
+    <span class="city-name">Астана</span>
+      <span class="city-filial">1 филиал</span>
+  </div>
 </body>
 </html>

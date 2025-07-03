@@ -29,7 +29,7 @@
     }
 
     h2 {
-      margin: 0 0 20px 0;
+      margin: 0 0 10px 0;
       color: #333;
       text-align: left;
     }
@@ -43,6 +43,48 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
 
+    /* Стили для карточки специалиста */
+    .specialist-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .specialist-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .specialist-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .specialist-details {
+      flex-grow: 1;
+    }
+
+    .specialist-name {
+      font-weight: bold;
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    .specialist-specialty {
+      font-size: 14px;
+      color: #666;
+    }
+
     .calendar-container {
       background: #ffffff;
       border: 1px solid #e0e0e0;
@@ -52,6 +94,7 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
 
+    /* Остальные стили остаются без изменений */
     .calendar-header {
       display: flex;
       justify-content: space-between;
@@ -193,13 +236,114 @@
     .submit-button:hover {
       background-color: black;
     }
+    .header-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: black;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-decoration: none;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .branch-button {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-grow: 1;
+            background: #f5f5f5;
+
+            border-radius: 12px;
+            padding: 12px 16px;
+            cursor: pointer;
+
+            text-decoration: none;
+            color: inherit;
+            min-height: 60px;
+        }
+
+        .branch-info-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .branch-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #e74c3c;
+            display: flex;
+            color: white;
+          background-image: url("images/llogo.jpg");
+        }
+
+        .branch-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .branch-name {
+            font-weight: bold;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .branch-address {
+            font-size: 14px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .arrow-down {
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid #666;
+            margin-left: 10px;
+        }
+                .back-button:hover {
+            background-color: #e0e0e0;
+        }
   </style>
 </head>
 <body>
-  <a href="almaty_masters_abai.html" class="back-button">← Назад</a>
-
+    <div class="header-container">
+        <button class="back-button" onclick="history.back()">←</button>
+        <a href="almaty_filial.html" class="branch-button">
+            <div class="branch-info-container">
+                <div class="branch-logo"></div>
+                <div class="branch-text">
+                    <div class="branch-name">BROS & BLADES АL</div>
+                    <div class="branch-address">ул. Абая дом 10</div>
+                </div>
+            </div>
+            <span class="arrow-down"></span>
+        </a>
+  </div>
   <div class="specialist-info">
-    <h2 id="header">Запись к: <span id="specialistName">Загрузка...</span></h2>
+    <h2>Запись к специалисту:</h2>
+    <div class="specialist-card" id="specialistCard">
+      <div class="specialist-avatar">
+        <img id="specialistAvatar" src="" alt="Фото специалиста">
+      </div>
+      <div class="specialist-details">
+        <div class="specialist-name" id="specialistFullName">Загрузка...</div>
+        <div class="specialist-specialty" id="specialistPosition">Загрузка...</div>
+      </div>
+    </div>
   </div>
 
   <div class="calendar-container">
@@ -230,9 +374,28 @@
     <div id="noAvailableMsg" class="no-available" style="display: none;">Нет доступного времени на эту дату</div>
   </div>
 
-  <button id="submitBtn" class="submit-button">Подтвердить запись</button>
+  <button id="submitBtn" class="submit-button">Готово</button>
 
   <script>
+    // Данные о специалистах
+    const specialistsData = {
+      "Специалист 1": {
+        name: "Александр Петров",
+        position: "Барбер",
+        avatar: "https://randomuser.me/api/portraits/men/32.jpg"
+      },
+      "Специалист 2": {
+        name: "Дмитрий Иванов",
+        position: "Стилист",
+        avatar: "https://randomuser.me/api/portraits/men/44.jpg"
+      },
+      "Специалист 3": {
+        name: "Екатерина Смирнова",
+        position: "Мастер ногтевого сервиса",
+        avatar: "https://randomuser.me/api/portraits/women/65.jpg"
+      }
+    };
+
     const schedules = {
       "Специалист 1": {
         "2025-07-26": [],
@@ -240,7 +403,8 @@
       },
       "Специалист 2": {
         "2025-07-26": ["11:00"]
-      }
+      },
+      "Специалист 3": {}
     };
 
     // Загрузка из localStorage
@@ -258,7 +422,17 @@
 
     const params = new URLSearchParams(window.location.search);
     const specialist = params.get("specialist") || "Специалист 1";
-    document.getElementById("specialistName").textContent = specialist;
+
+    // Заполняем данные о специалисте
+    const specialistInfo = specialistsData[specialist] || {
+      name: specialist,
+      position: "Специалист",
+      avatar: "https://randomuser.me/api/portraits/lego/1.jpg"
+    };
+
+    document.getElementById("specialistFullName").textContent = specialistInfo.name;
+    document.getElementById("specialistPosition").textContent = specialistInfo.position;
+    document.getElementById("specialistAvatar").src = specialistInfo.avatar;
 
     let selectedDate = null;
     let selectedTime = null;
@@ -399,53 +573,59 @@
     }
 
     document.getElementById("submitBtn").addEventListener("click", () => {
-      if (!selectedDate || !selectedTime) return;
+  if (!selectedDate || !selectedTime) return;
 
-      const payload = JSON.stringify({
-        specialist,
-        datetime: `${selectedDate} ${selectedTime}`
-      });
+  const payload = JSON.stringify({
+    specialist,
+    datetime: `${selectedDate} ${selectedTime}`
+  });
 
-      const timeToMinutes = t => {
-        const [h, m] = t.split(":").map(Number);
-        return h * 60 + m;
-      };
-      const minutesToTime = m => {
-        const h = Math.floor(m / 60);
-        const min = m % 60;
-        return `${String(h).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
-      };
+  const timeToMinutes = t => {
+    const [h, m] = t.split(":").map(Number);
+    return h * 60 + m;
+  };
+  const minutesToTime = m => {
+    const h = Math.floor(m / 60);
+    const min = m % 60;
+    return `${String(h).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
+  };
 
-      const base = timeToMinutes(selectedTime);
-      const toBlock = [0, 15, 30].map(offset => minutesToTime(base + offset));
+  const base = timeToMinutes(selectedTime);
+  const toBlock = [0, 15, 30].map(offset => minutesToTime(base + offset));
 
-      if (!schedules[specialist]) schedules[specialist] = {};
-      if (!schedules[specialist][selectedDate]) schedules[specialist][selectedDate] = [];
+  if (!schedules[specialist]) schedules[specialist] = {};
+  if (!schedules[specialist][selectedDate]) schedules[specialist][selectedDate] = [];
 
-      toBlock.forEach(t => {
-        if (!schedules[specialist][selectedDate].includes(t)) {
-          schedules[specialist][selectedDate].push(t);
-        }
-      });
+  toBlock.forEach(t => {
+    if (!schedules[specialist][selectedDate].includes(t)) {
+      schedules[specialist][selectedDate].push(t);
+    }
+  });
 
-      const localData = JSON.parse(localStorage.getItem("bookingData") || "{}");
-      if (!localData[specialist]) localData[specialist] = {};
-      if (!localData[specialist][selectedDate]) localData[specialist][selectedDate] = [];
-      toBlock.forEach(t => {
-        if (!localData[specialist][selectedDate].includes(t)) {
-          localData[specialist][selectedDate].push(t);
-        }
-      });
-      localStorage.setItem("bookingData", JSON.stringify(localData));
+  const localData = JSON.parse(localStorage.getItem("bookingData") || "{}");
+  if (!localData[specialist]) localData[specialist] = {};
+  if (!localData[specialist][selectedDate]) localData[specialist][selectedDate] = [];
+  toBlock.forEach(t => {
+    if (!localData[specialist][selectedDate].includes(t)) {
+      localData[specialist][selectedDate].push(t);
+    }
+  });
+  localStorage.setItem("bookingData", JSON.stringify(localData));
 
-      if (window.Telegram && Telegram.WebApp) {
-        Telegram.WebApp.sendData(payload);
-        Telegram.WebApp.close();
-      } else {
-        alert("Запись успешно оформлена!");
-        window.location.href = "index.html";
-      }
-    });
+  // Получаем ID специалиста (можно передавать по-настоящему, сейчас пример)
+  const specialistId = encodeURIComponent(specialist.replace(/\s/g, '_')); // или свой ID
+
+  const query = new URLSearchParams({
+    specialist: specialistInfo.name,
+    specialistId,
+    date: selectedDate,
+    time: selectedTime
+  }).toString();
+
+  window.location.href = `service.html?${query}`;
+});
+
+
 
     document.getElementById("prevMonth").addEventListener('click', () => {
       currentDate.setMonth(currentDate.getMonth() - 1);
