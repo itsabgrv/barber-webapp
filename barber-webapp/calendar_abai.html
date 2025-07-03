@@ -103,7 +103,7 @@
         }
 
         .day.selected {
-            background-color: #e74c3c;
+            background-color: black;
             color: white;
         }
 
@@ -150,7 +150,7 @@
         }
 
         .time-slot.selected {
-            background-color: #e74c3c;
+            background-color: black;
             color: white;
         }
 
@@ -165,7 +165,7 @@
             display: none;
             width: 100%;
             padding: 12px;
-            background-color: #e74c3c;
+            background-color: black;
             color: white;
             border: none;
             border-radius: 6px;
@@ -176,7 +176,7 @@
         }
 
         .continue-button:hover {
-            background-color: #c0392b;
+            border: 1px solid darkred;
         }
     </style>
 </head>
@@ -187,7 +187,7 @@
     <div class="calendar-container">
         <div class="calendar-header">
             <div class="month-nav" id="prevMonth">❮</div>
-            <div class="calendar-month" id="currentMonth">Июль</div>
+            <div class="calendar-month" id="currentMonth"></div>
             <div class="month-nav" id="nextMonth">❯</div>
         </div>
 
@@ -229,6 +229,9 @@
             "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
         ];
 
+        // Дни недели (для отладки)
+        const dayNames = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+
         // Проверка, занято ли время всеми мастерами
         function isTimeFullyBooked(date, time) {
             return specialists.every(specialist => {
@@ -254,11 +257,12 @@
             const daysGrid = document.getElementById('daysGrid');
             daysGrid.innerHTML = '';
 
-            // Обновляем отображаемый месяц
-            document.getElementById('currentMonth').textContent = monthNames[currentDate.getMonth()];
-
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
+
+            // Обновляем отображаемый месяц и год
+            document.getElementById('currentMonth').textContent =
+                `${monthNames[month]} ${year}`;
 
             // Первый день месяца
             const firstDay = new Date(year, month, 1);

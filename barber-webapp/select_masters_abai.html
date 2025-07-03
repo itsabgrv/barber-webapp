@@ -80,8 +80,8 @@
 
     .select-button {
       background: none;
-      border: 1px solid #e74c3c;
-      color: #e74c3c;
+      border: 1px solid black;
+      color: black;
       border-radius: 6px;
       padding: 8px 16px;
       font-size: 14px;
@@ -91,7 +91,7 @@
     }
 
     .select-button:hover {
-      background-color: #e74c3c;
+      background-color: black;
       color: white;
     }
 
@@ -100,104 +100,130 @@
       text-align: center;
       margin-top: 20px;
     }
+
+    .selected-date {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 16px;
+      color: #333;
+    }
   </style>
 </head>
 <body>
+  <button class="back-button" onclick="window.history.back()">← Назад</button>
+  <h2>Выберите специалиста</h2>
 
-<button class="back-button" onclick="window.history.back()">← Назад</button>
-<h2>Выберите специалиста</h2>
+  <div class="selected-date" id="selectedDateTime"></div>
 
-<div id="mastersContainer"></div>
+  <div id="mastersContainer"></div>
 
-<script>
-  const urlParams = new URLSearchParams(window.location.search);
-  const selectedDate = urlParams.get("date");
-  const selectedTime = urlParams.get("time");
+  <script>
+    // Получаем параметры из URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedDate = urlParams.get("date");
+    const selectedTime = urlParams.get("time");
 
-  const masters = [
-    {
-      id: 1,
-      firstName: "Александр",
-      lastName: "Петров",
-      specialty: "Барбер",
-      avatar: "https://randomuser.me/api/portraits/men/32.jpg"
-    },
-    {
-      id: 2,
-      firstName: "Дмитрий",
-      lastName: "Иванов",
-      specialty: "Стилист",
-      avatar: "https://randomuser.me/api/portraits/men/44.jpg"
+    // Отображаем выбранную дату и время
+    if (selectedDate && selectedTime) {
+      const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+      const formattedDate = new Date(selectedDate).toLocaleDateString('ru-RU', dateOptions);
+      document.getElementById('selectedDateTime').textContent =
+        `Выбрано: ${formattedDate} в ${selectedTime}`;
     }
-  ];
 
-  const bookings = JSON.parse(localStorage.getItem("bookingData") || "{}");
+    const masters = [
+      {
+        id: 1,
+        firstName: "Александр",
+        lastName: "Петров",
+        specialty: "Барбер",
+        avatar: "https://randomuser.me/api/portraits/men/32.jpg"
+      },
+      {
+        id: 2,
+        firstName: "Дмитрий",
+        lastName: "Иванов",
+        specialty: "Стилист",
+        avatar: "https://randomuser.me/api/portraits/men/44.jpg"
+      }
+    ];
 
-  const toMinutes = t => {
-    const [h, m] = t.split(":").map(Number);
-    return h * 60 + m;
-  };
+    // Загрузка бронирований из localStorage
+    const bookings = JSON.parse(localStorage.getItem("bookingData") || "{}");
 
-  const blockedTimes = [0, 15, 30].map(offset => {
-    const total = toMinutes(selectedTime) + offset;
-    const h = String(Math.floor(total / 60)).padStart(2, '0');
-    const m = String(total % 60).padStart(2, '0');
-    return `${h}:${m}`;
-  });
+    const mastersContainer = document.getElementById("mastersContainer");
 
-  const mastersContainer = document.getElementById("mastersContainer");
+    masters.forEach(master => {
+      const masterName = `${master.firstName} ${master.lastName}`;
+      const specialistBookings = bookings[masterName] || {};
+      const busyTimes = specialistBookings[selectedDate] || [];
 
-  masters.forEach(master => {
-    const specialistBookings = bookings[`${master.firstName} ${master.lastName}`] || {};
-    const busy = specialistBookings[selectedDate] || [];
+      // Проверяем, свободно ли выбранное время у этого мастера
+      const isAvailable = !busyTimes.includes(selectedTime);
 
-    const isFree = blockedTimes.every(t => !busy.includes(t));
-    if (isFree) {
-      const card = document.createElement("div");
-      card.className = "master-card";
+      if (isAvailable) {
+        const card = document.createElement("div");
+        card.className = "master-card";
 
-      // Аватар мастера
-      const avatar = document.createElement("div");
-      avatar.className = "master-avatar";
-      avatar.innerHTML = `<img src="${master.avatar}" alt="${master.firstName}">`;
+        // Аватар мастера
+        const avatar = document.createElement("div");
+        avatar.className = "master-avatar";
+        avatar.innerHTML = `<img src="${master.avatar}" alt="${master.firstName}">`;
 
-      // Информация о мастере
-      const info = document.createElement("div");
-      info.className = "master-info";
-      info.innerHTML = `
-        <div class="master-name">${master.firstName} ${master.lastName}</div>
-        <div class="master-specialty">${master.specialty}</div>
-      `;
+        // Информация о мастере
+        const info = document.createElement("div");
+        info.className = "master-info";
+        info.innerHTML = `
+          <div class="master-name">${master.firstName} ${master.lastName}</div>
+          <div class="master-specialty">${master.specialty}</div>
+        `;
 
-      // Кнопка выбора
-      const btn = document.createElement("button");
-      btn.className = "select-button";
-      btn.innerText = "Выбрать";
-      btn.onclick = () => {
-        // Добавляем запись
-        const masterName = `${master.firstName} ${master.lastName}`;
-        if (!bookings[masterName]) bookings[masterName] = {};
-        if (!bookings[masterName][selectedDate]) bookings[masterName][selectedDate] = [];
-        blockedTimes.forEach(t => bookings[masterName][selectedDate].push(t));
-        localStorage.setItem("bookingData", JSON.stringify(bookings));
+        // Кнопка выбора
+        const btn = document.createElement("button");
+        btn.className = "select-button";
+        btn.innerText = "Выбрать";
+        btn.onclick = () => {
+          // Сохраняем данные бронирования
+          const bookingData = {
+            branch: "BROS & BLADES AL - ул. Абая дом 10",
+            date: selectedDate,
+            time: selectedTime,
+            specialist: masterName,
+            specialistId: master.id, // Добавляем ID специалиста
+            service: "Не выбрана" // Можно добавить выбор услуги позже
+          };
 
-        window.location.href = "index.html";
+          // Сохраняем в localStorage
+          localStorage.setItem("currentBooking", JSON.stringify(bookingData));
+
+          // Перенаправляем на страницу выбора услуги с параметрами в URL
+          window.location.href = `service.html?date=${encodeURIComponent(selectedDate)}&time=${encodeURIComponent(selectedTime)}&specialistId=${master.id}`;
+        };
+
+        card.appendChild(avatar);
+        card.appendChild(info);
+        card.appendChild(btn);
+        mastersContainer.appendChild(card);
+      }
+    });
+
+    // Если нет доступных специалистов
+    if (mastersContainer.children.length === 0) {
+      const noMasters = document.createElement("p");
+      noMasters.className = "no-masters";
+      noMasters.innerText = "На это время нет доступных специалистов.";
+      mastersContainer.appendChild(noMasters);
+
+      const backButton = document.createElement("button");
+      backButton.className = "select-button";
+      backButton.style.marginTop = "20px";
+      backButton.style.width = "100%";
+      backButton.innerText = "Выбрать другое время";
+      backButton.onclick = () => {
+        window.history.back();
       };
-
-      card.appendChild(avatar);
-      card.appendChild(info);
-      card.appendChild(btn);
-      mastersContainer.appendChild(card);
+      mastersContainer.appendChild(backButton);
     }
-  });
-
-  if (mastersContainer.children.length === 0) {
-    const noMasters = document.createElement("p");
-    noMasters.className = "no-masters";
-    noMasters.innerText = "На это время нет доступных специалистов.";
-    mastersContainer.appendChild(noMasters);
-  }
-</script>
-
+  </script>
 </body>
 </html>

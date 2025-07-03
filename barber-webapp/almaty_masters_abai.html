@@ -22,44 +22,63 @@
       border-radius: 20px;
       font-size: 14px;
       cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       text-decoration: none;
       color: #333;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
-    h3 {
-      margin: 0 0 20px 0;
+    h2 {
+      margin: 20px 0;
       color: #333;
+      text-align: center;
     }
 
     .specialist-card {
       background: #ffffff;
       border: 1px solid #e0e0e0;
       border-radius: 10px;
-      padding: 16px;
-      margin-bottom: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      gap: 16px;
       cursor: pointer;
-      transition: all 0.3s;
     }
 
-    .specialist-card:hover {
-      background-color: #f9f9f9;
+    .specialist-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .specialist-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .specialist-info {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      flex-grow: 1;
+      text-align: left;
     }
 
     .specialist-name {
       font-weight: bold;
       font-size: 16px;
       color: #333;
+      margin-bottom: 4px;
+    }
+
+    .specialist-specialty {
+      font-size: 14px;
+      color: #666;
     }
 
     .selection-indicator {
@@ -73,8 +92,8 @@
     }
 
     .selection-indicator.selected {
-      border-color: #e74c3c;
-      background-color: #e74c3c;
+      border-color: black;
+      background-color: black;
     }
 
     .selection-indicator.selected::after {
@@ -89,7 +108,7 @@
     .continue-button {
       width: 100%;
       padding: 12px;
-      background-color: #e74c3c;
+      background-color: black;
       color: white;
       border: none;
       border-radius: 6px;
@@ -101,7 +120,7 @@
     }
 
     .continue-button:hover {
-      background-color: #c0392b;
+      background-color: black;
     }
 
     .continue-button.show {
@@ -111,25 +130,37 @@
 </head>
 <body>
   <a href="almaty_abai.html" class="back-button">← Назад</a>
-  <h3>Выбрать специалиста</h3>
+  <h2>Выберите специалиста</h2>
 
   <div class="specialist-card" onclick="selectSpecialist(this, 'Специалист 1')">
+    <div class="specialist-avatar">
+      <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Специалист 1">
+    </div>
     <div class="specialist-info">
-      <div class="specialist-name">Специалист 1</div>
+      <div class="specialist-name">Александр Петров</div>
+      <div class="specialist-specialty">Барбер</div>
     </div>
     <div class="selection-indicator"></div>
   </div>
 
   <div class="specialist-card" onclick="selectSpecialist(this, 'Специалист 2')">
+    <div class="specialist-avatar">
+      <img src="https://randomuser.me/api/portraits/men/44.jpg" alt="Специалист 2">
+    </div>
     <div class="specialist-info">
-      <div class="specialist-name">Специалист 2</div>
+      <div class="specialist-name">Дмитрий Иванов</div>
+      <div class="specialist-specialty">Стилист</div>
     </div>
     <div class="selection-indicator"></div>
   </div>
 
   <div class="specialist-card" onclick="selectSpecialist(this, 'Специалист 3')">
+    <div class="specialist-avatar">
+      <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Специалист 3">
+    </div>
     <div class="specialist-info">
-      <div class="specialist-name">Специалист 3</div>
+      <div class="specialist-name">Екатерина Смирнова</div>
+      <div class="specialist-specialty">Мастер ногтевого сервиса</div>
     </div>
     <div class="selection-indicator"></div>
   </div>
@@ -140,16 +171,13 @@
     let selectedSpecialist = null;
 
     function selectSpecialist(card, specialist) {
-      // Сброс выбора для всех карточек
-      document.querySelectorAll('.specialist-card').forEach(c => {
-        c.querySelector('.selection-indicator').classList.remove('selected');
+      document.querySelectorAll('.selection-indicator').forEach(indicator => {
+        indicator.classList.remove('selected');
       });
 
-      // Выбор текущей карточки
       card.querySelector('.selection-indicator').classList.add('selected');
       selectedSpecialist = specialist;
 
-      // Показываем кнопку продолжения
       document.getElementById('continueButton').classList.add('show');
     }
 

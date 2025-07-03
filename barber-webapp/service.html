@@ -96,8 +96,8 @@
 
     .select-button {
       background: none;
-      border: 1px solid #e74c3c;
-      color: #e74c3c;
+      border: 1px solid black;
+      color: black;
       border-radius: 6px;
       padding: 6px 12px;
       font-size: 14px;
@@ -106,13 +106,54 @@
     }
 
     .select-button:hover {
-      background-color: #e74c3c;
+      background-color: black;
       color: white;
     }
 
     .select-button.selected {
-      background-color: #e74c3c;
+      background-color: black;
       color: white;
+    }
+
+    .continue-button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background-color: black;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: all 0.3s;
+    }
+
+    .continue-button:hover {
+      background-color: black;
+    }
+
+    .selected-services-summary {
+      margin-top: 20px;
+      padding: 16px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .selected-service {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .total-price {
+      font-weight: bold;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #e0e0e0;
+      display: flex;
+      justify-content: space-between;
     }
   </style>
 </head>
@@ -121,133 +162,121 @@
 <button class="back-button" onclick="history.back()">← Назад</button>
 <h3>Выбрать услугу</h3>
 
-<div class="service-card">
-  <div class="service-header">
-    <span class="service-title">Мужская стрижка</span>
-    <span class="service-duration">1 ч</span>
-  </div>
-  <div class="service-description" id="desc1">
-    Стрижка выполняется с помощью ножниц и машинок, отлично подойдет обладателям коротких волос. Услуга включает в себя мытье головы до и после стрижки, укладку с применением профессиональных стайлинговых средств.
-  </div>
-  <div class="service-footer">
-    <button class="read-more" onclick="toggleDescription('desc1', this)">ещё</button>
-    <span class="price">4 000 ₸</span>
-    <button class="select-button" onclick="selectService(this)">Выбрать</button>
+<div id="servicesContainer">
+  <!-- Услуги будут добавлены через JavaScript -->
+</div>
+
+<div class="selected-services-summary" id="selectedServicesSummary" style="display: none;">
+  <h4>Выбранные услуги:</h4>
+  <div id="selectedServicesList"></div>
+  <div class="total-price">
+    <span>Итого:</span>
+    <span id="totalPrice">0 ₸</span>
   </div>
 </div>
 
-<div class="service-card">
-  <div class="service-header">
-    <span class="service-title">Стрижка машинкой</span>
-    <span class="service-duration">15 мин</span>
-  </div>
-  <div class="service-description" id="desc2">
-    Стрижка выполняется исключительно машинкой с использованием 1 насадки.
-Услуга включает в себя мытье головы до и после стрижки.
-Стрижка по технологии Fade не относится к данной услуге.
-  </div>
-  <div class="service-footer">
-    <button class="read-more" onclick="toggleDescription('desc2', this)">ещё</button>
-    <span class="price">2 500 ₸</span>
-    <button class="select-button" onclick="selectService(this)">Выбрать</button>
-  </div>
-</div>
-
-<div class="service-card">
-  <div class="service-header">
-    <span class="service-title">Оформление бороды</span>
-    <span class="service-duration">30 мин</span>
-  </div>
-  <div class="service-description" id="desc3">
-    Создание формы бороды и четких контуров или гладкое бритьё.
-      Услуга может включать в себя распаривание с использованием эфирных масел, легкий массаж лица, охлаждающий компресс.
-  </div>
-  <div class="service-footer">
-    <button class="read-more" onclick="toggleDescription('desc3', this)">ещё</button>
-    <span class="price">3 000 ₸</span>
-    <button class="select-button" onclick="selectService(this)">Выбрать</button>
-  </div>
-</div>
-
-<div class="service-card">
-  <div class="service-header">
-    <span class="service-title">Королевское бритье</span>
-    <span class="service-duration">40 мин</span>
-  </div>
-  <div class="service-description" id="desc4">
-    Быстрая и аккуратная стрижка с использованием профессиональных машинок. Подходит для тех, кто предпочитает короткие стрижки.
-  </div>
-  <div class="service-footer">
-    <button class="read-more" onclick="toggleDescription('desc4', this)">ещё</button>
-    <span class="price">3 500 ₸</span>
-    <button class="select-button" onclick="selectService(this)">Выбрать</button>
-  </div>
-</div>
-
-<div class="service-card">
-  <div class="service-header">
-    <span class="service-title">Укладка</span>
-    <span class="service-duration">15 мин</span>
-  </div>
-  <div class="service-description" id="desc5">
-    Быстрая и аккуратная стрижка с использованием профессиональных машинок. Подходит для тех, кто предпочитает короткие стрижки.
-  </div>
-  <div class="service-footer">
-    <button class="read-more" onclick="toggleDescription('desc5', this)">ещё</button>
-    <span class="price">2 000 ₸</span>
-    <button class="select-button" onclick="selectService(this)">Выбрать</button>
-  </div>
-</div>
-
-<div class="service-card">
-  <div class="service-header">
-    <span class="service-title">Детская стрижка</span>
-    <span class="service-duration">45 мин</span>
-  </div>
-  <div class="service-description" id="desc6">
-    Услуга для настоящих ценительниц мужского FADE!  Выполняется исключительно по мужской технике стрижки на основе FADE (экстракороткая стрижка с переходом длин от голой кожи до 6мм. в зоне затылка и висков)
-      Услуга включает в себя мытье головы до и после стрижки, укладку с применением профессиональных стайлинговых средств
-  </div>
-  <div class="service-footer">
-    <button class="read-more" onclick="toggleDescription('desc6', this)">ещё</button>
-    <span class="price">3 000 ₸</span>
-    <button class="select-button" onclick="selectService(this)">Выбрать</button>
-  </div>
-</div>
-
-<div class="service-card">
-  <div class="service-header">
-    <span class="service-title">Камуфляж седины</span>
-    <span class="service-duration">40 мин</span>
-  </div>
-  <div class="service-description" id="desc7">
-    Мы используем лучшие средства для тонирования твоей бороды и волос, что позволяет им выглядеть естественно.
-  </div>
-  <div class="service-footer">
-    <button class="read-more" onclick="toggleDescription('desc7', this)">ещё</button>
-    <span class="price">4 500 ₸</span>
-    <button class="select-button" onclick="selectService(this)">Выбрать</button>
-  </div>
-</div>
-
-<div class="service-card">
-  <div class="service-header">
-    <span class="service-title">Комплекс "Все включено"</span>
-    <span class="service-duration">1 час</span>
-  </div>
-  <div class="service-description" id="desc8">
-    ще больше пользы с углубленным уходом за кожей головы!
-В данной услуге вы получите максимальную пользу благодаря дополнительным этапам ухода – очищение, профилактика выпадения волос, питание и увлажнение!
-Вам — приятно, волосам — полезно!
-  </div>
-  <div class="service-footer">
-    <button class="read-more" onclick="toggleDescription('desc8', this)">ещё</button>
-    <span class="price">7 000 ₸</span>
-    <button class="select-button" onclick="selectService(this)">Выбрать</button>
-  </div>
-</div>
+<button class="continue-button" id="continueButton" style="display: none;">Продолжить</button>
 
 <script>
+  // Массив услуг
+  const services = [
+    {
+      id: 1,
+      title: "Мужская стрижка",
+      duration: "1 ч",
+      description: "Стрижка выполняется с помощью ножниц и машинок, отлично подойдет обладателям коротких волос. Услуга включает в себя мытье головы до и после стрижки, укладку с применением профессиональных стайлинговых средств.",
+      price: 4000
+    },
+    {
+      id: 2,
+      title: "Стрижка машинкой",
+      duration: "15 мин",
+      description: "Стрижка выполняется исключительно машинкой с использованием 1 насадки. Услуга включает в себя мытье головы до и после стрижки. Стрижка по технологии Fade не относится к данной услуге.",
+      price: 2500
+    },
+    {
+      id: 3,
+      title: "Оформление бороды",
+      duration: "30 мин",
+      description: "Создание формы бороды и четких контуров или гладкое бритьё. Услуга может включать в себя распаривание с использованием эфирных масел, легкий массаж лица, охлаждающий компресс.",
+      price: 3000
+    },
+    {
+      id: 4,
+      title: "Королевское бритье",
+      duration: "40 мин",
+      description: "Быстрая и аккуратная стрижка с использованием профессиональных машинок. Подходит для тех, кто предпочитает короткие стрижки.",
+      price: 3500
+    },
+    {
+      id: 5,
+      title: "Укладка",
+      duration: "15 мин",
+      description: "Быстрая и аккуратная стрижка с использованием профессиональных машинок. Подходит для тех, кто предпочитает короткие стрижки.",
+      price: 2000
+    },
+    {
+      id: 6,
+      title: "Детская стрижка",
+      duration: "45 мин",
+      description: "Услуга для настоящих ценительниц мужского FADE! Выполняется исключительно по мужской технике стрижки на основе FADE (экстракороткая стрижка с переходом длин от голой кожи до 6мм. в зоне затылка и висков) Услуга включает в себя мытье головы до и после стрижки, укладку с применением профессиональных стайлинговых средств",
+      price: 3000
+    },
+    {
+      id: 7,
+      title: "Камуфляж седины",
+      duration: "40 мин",
+      description: "Мы используем лучшие средства для тонирования твоей бороды и волос, что позволяет им выглядеть естественно.",
+      price: 4500
+    },
+    {
+      id: 8,
+      title: "Комплекс 'Все включено'",
+      duration: "1 час",
+      description: "Еще больше пользы с углубленным уходом за кожей головы! В данной услуге вы получите максимальную пользу благодаря дополнительным этапам ухода – очищение, профилактика выпадения волос, питание и увлажнение! Вам — приятно, волосам — полезно!",
+      price: 7000
+    }
+  ];
+
+  // Массив для хранения выбранных услуг
+  let selectedServices = [];
+
+  // Функция для отображения услуг
+  function renderServices() {
+    const container = document.getElementById('servicesContainer');
+    container.innerHTML = '';
+
+    services.forEach(service => {
+      const card = document.createElement('div');
+      card.className = 'service-card';
+      card.innerHTML = `
+        <div class="service-header">
+          <span class="service-title">${service.title}</span>
+          <span class="service-duration">${service.duration}</span>
+        </div>
+        <div class="service-description" id="desc${service.id}">
+          ${service.description}
+        </div>
+        <div class="service-footer">
+          <button class="read-more" onclick="toggleDescription('desc${service.id}', this)">ещё</button>
+          <span class="price">${service.price.toLocaleString()} ₸</span>
+          <button class="select-button" onclick="toggleServiceSelection(${service.id}, this)">
+            ${selectedServices.some(s => s.id === service.id) ? 'Отменить' : 'Выбрать'}
+          </button>
+        </div>
+      `;
+
+      // Добавляем класс selected, если услуга уже выбрана
+      const selectButton = card.querySelector('.select-button');
+      if (selectedServices.some(s => s.id === service.id)) {
+        selectButton.classList.add('selected');
+      }
+
+      container.appendChild(card);
+    });
+  }
+
+  // Функция для переключения описания
   function toggleDescription(id, button) {
     const desc = document.getElementById(id);
     desc.classList.toggle('expanded');
@@ -259,18 +288,106 @@
     }
   }
 
-  function selectService(button) {
-    // Сначала снимаем выделение со всех кнопок
-    document.querySelectorAll('.select-button').forEach(btn => {
-      btn.classList.remove('selected');
+  // Функция для выбора/отмены выбора услуги
+  function toggleServiceSelection(serviceId, button) {
+    const service = services.find(s => s.id === serviceId);
+
+    // Проверяем, выбрана ли уже эта услуга
+    const index = selectedServices.findIndex(s => s.id === serviceId);
+
+    if (index === -1) {
+      // Добавляем услугу
+      selectedServices.push(service);
+      button.textContent = 'Отменить';
+      button.classList.add('selected');
+    } else {
+      // Удаляем услугу
+      selectedServices.splice(index, 1);
+      button.textContent = 'Выбрать';
+      button.classList.remove('selected');
+    }
+
+    // Обновляем список выбранных услуг и итоговую сумму
+    updateSelectedServicesSummary();
+
+    // Показываем/скрываем кнопку "Продолжить" в зависимости от количества выбранных услуг
+    const continueButton = document.getElementById('continueButton');
+    const summary = document.getElementById('selectedServicesSummary');
+
+    if (selectedServices.length > 0) {
+      continueButton.style.display = 'block';
+      summary.style.display = 'block';
+    } else {
+      continueButton.style.display = 'none';
+      summary.style.display = 'none';
+    }
+  }
+
+  // Функция для обновления списка выбранных услуг и итоговой суммы
+  function updateSelectedServicesSummary() {
+    const listContainer = document.getElementById('selectedServicesList');
+    const totalPriceElement = document.getElementById('totalPrice');
+
+    listContainer.innerHTML = '';
+
+    let totalPrice = 0;
+
+    selectedServices.forEach(service => {
+      const serviceElement = document.createElement('div');
+      serviceElement.className = 'selected-service';
+      serviceElement.innerHTML = `
+        <span>${service.title}</span>
+        <span>${service.price.toLocaleString()} ₸</span>
+      `;
+      listContainer.appendChild(serviceElement);
+
+      totalPrice += service.price;
     });
 
-    // Затем выделяем текущую
-    button.classList.add('selected');
-
-    // Здесь можно добавить логику для перехода к следующему шагу
-    // Например: window.location.href = 'calendar.html';
+    totalPriceElement.textContent = `${totalPrice.toLocaleString()} ₸`;
   }
+
+  // Функция для перехода к следующему шагу
+  function continueToNextStep() {
+    // Сохраняем выбранные услуги в localStorage
+    const urlParams = new URLSearchParams(window.location.search);
+    const bookingData = {
+      branch: "BROS & BLADES AL - ул. Абая дом 10",
+      date: urlParams.get("date"),
+      time: urlParams.get("time"),
+      specialist: urlParams.get("specialist"),
+      specialistId: urlParams.get("specialistId"),
+      services: selectedServices,
+      totalPrice: selectedServices.reduce((sum, service) => sum + service.price, 0)
+    };
+
+    localStorage.setItem('currentBooking', JSON.stringify(bookingData));
+
+    // Переходим на страницу подтверждения (замените на свою)
+    window.location.href = 'confirmation.html';
+  }
+
+  // Инициализация
+  document.addEventListener('DOMContentLoaded', () => {
+    renderServices();
+
+    // Назначаем обработчик для кнопки "Продолжить"
+    document.getElementById('continueButton').addEventListener('click', continueToNextStep);
+
+    // Проверяем, есть ли уже выбранные услуги в localStorage
+    const savedBooking = localStorage.getItem('currentBooking');
+    if (savedBooking) {
+      const booking = JSON.parse(savedBooking);
+      if (booking.services && booking.services.length > 0) {
+        selectedServices = booking.services;
+        updateSelectedServicesSummary();
+        renderServices();
+
+        document.getElementById('continueButton').style.display = 'block';
+        document.getElementById('selectedServicesSummary').style.display = 'block';
+      }
+    }
+  });
 </script>
 
 </body>

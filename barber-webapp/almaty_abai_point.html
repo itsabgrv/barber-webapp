@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подтверждение записи</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 16px;
+            background-color: #f5f5f5;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            margin-bottom: 20px;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .booking-card {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .booking-item {
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .booking-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .item-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .item-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .submit-button:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="window.history.back()">← Назад</button>
+
+    <div class="booking-card">
+        <h2>Подтверждение записи</h2>
+
+        <div class="booking-item">
+            <div class="item-label">Филиал</div>
+            <div class="item-value" id="branch-value">BROS & BLADES AL - ул. Абая дом 10</div>
+        </div>
+
+        <div class="booking-item">
+            <div class="item-label">Дата и время</div>
+            <div class="item-value" id="datetime-value">Не выбрано</div>
+        </div>
+
+        <div class="booking-item">
+            <div class="item-label">Специалист</div>
+            <div class="item-value" id="specialist-value">Не выбран</div>
+        </div>
+
+        <div class="booking-item">
+            <div class="item-label">Услуга</div>
+            <div class="item-value" id="service-value">Не выбрана</div>
+        </div>
+    </div>
+
+    <button class="submit-button" id="submitBtn">Подтвердить запись</button>
+
+    <script>
+        // Получаем параметры из URL
+        const urlParams = new URLSearchParams(window.location.search);
+
+        // Получаем данные из localStorage
+        const bookingData = JSON.parse(localStorage.getItem('bookingData') || '{}');
+
+        // Отображаем выбранные данные
+        document.getElementById('branch-value').textContent =
+            bookingData.branch || 'BROS & BLADES AL - ул. Абая дом 10';
+
+        if (bookingData.date && bookingData.time) {
+            document.getElementById('datetime-value').textContent =
+                `${bookingData.date} в ${bookingData.time}`;
+        }
+
+        document.getElementById('specialist-value').textContent =
+            bookingData.specialist || 'Не выбран';
+
+        document.getElementById('service-value').textContent =
+            bookingData.service || 'Не выбрана';
+
+        // Обработчик подтверждения записи
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            // Здесь можно добавить логику отправки данных на сервер
+            alert('Ваша запись успешно оформлена!');
+
+            // Очищаем данные бронирования
+            localStorage.removeItem('bookingData');
+
+            // Перенаправляем на главную страницу
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>
