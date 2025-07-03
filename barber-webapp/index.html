@@ -6,32 +6,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
-      font-family: sans-serif;
-      padding: 40px;
-      text-align: center;
-      background: #f5f5f5;
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 16px;
+      background-color: #f5f5f5;
     }
-    h2 {
-      margin-bottom: 30px;
+
+    h3 {
+      margin: 20px 0 20px 0;
+      color: #333;
+      text-align: left;
     }
-    button {
-      display: block;
-      width: 80%;
-      max-width: 300px;
-      margin: 10px auto;
-      padding: 15px;
-      font-size: 18px;
-      background: #50a8eb;
-      border: none;
-      border-radius: 8px;
-      color: white;
+
+    .city-card {
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      text-align: left;
       cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .city-card:hover {
+      background-color: #f9f9f9;
+    }
+
+    .city-name {
+      font-weight: bold;
+      font-size: 16px;
+      color: #333;
     }
   </style>
 </head>
 <body>
-  <h2>Выберите город:</h2>
-  <button onclick="location.href='almaty_filial.html'">Алматы</button>
-  <button onclick="location.href='astana.html'">Астана</button>
+  <h3>Выберите город:</h3>
+
+  <div class="city-card" onclick="location.href='almaty_filial.html'">
+    <span class="city-name">Алматы</span>
+  </div>
+
+  <div class="city-card" onclick="location.href='astana.html'">
+    <span class="city-name">Астана</span>
+  </div>
 </body>
 </html>

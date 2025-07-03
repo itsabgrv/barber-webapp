@@ -1,254 +1,463 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
   <title>Календарь записи</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Flatpickr -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
-
   <style>
     body {
-      background-color: #1e1e2f;
-      color: white;
-      font-family: sans-serif;
-      padding: 20px;
-      text-align: center;
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 16px;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+
+    .back-button {
+      display: inline-block;
+      padding: 8px 16px;
+      margin-bottom: 20px;
+      background-color: #f0f0f0;
+      border: none;
+      border-radius: 20px;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      text-decoration: none;
+      color: #333;
     }
 
     h2 {
-      margin-bottom: 20px;
+      margin: 0 0 20px 0;
+      color: #333;
+      text-align: left;
     }
 
-    #calendar {
-      max-width: 350px;
-      margin: 0 auto 30px;
+    .specialist-info {
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .calendar-container {
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .month-nav {
+      cursor: pointer;
+      font-size: 18px;
+      color: #e74c3c;
+      user-select: none;
+      padding: 8px;
+    }
+
+    .calendar-month {
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      margin-bottom: 10px;
+      font-weight: bold;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .weekday {
+      text-align: center;
+    }
+
+    .days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+    }
+
+    .day {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .day:hover {
+      background-color: #f0f0f0;
+    }
+
+    .day.other-month {
+      color: #ccc;
+    }
+
+    .day.selected {
+      background-color: #e74c3c;
+      color: white;
+    }
+
+    .day.today {
+      font-weight: bold;
+      color: #e74c3c;
+    }
+
+    .day.disabled {
+      color: #ccc;
+      cursor: not-allowed;
+      text-decoration: line-through;
+    }
+
+    .time-container {
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      display: none;
     }
 
     .time-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 10px;
-      margin-top: 20px;
+      margin-top: 10px;
     }
 
     .time-slot {
       padding: 10px;
-      background-color: #333;
-      color: white;
-      border: 1px solid #555;
+      background-color: #f9f9f9;
       border-radius: 6px;
       cursor: pointer;
+      text-align: center;
+      font-size: 14px;
+      transition: all 0.2s;
     }
 
-    .time-slot:hover,
+    .time-slot:hover {
+      background-color: #f0f0f0;
+    }
+
     .time-slot.selected {
-      background-color: #007BFF;
-    }
-
-    #submitBtn {
-      display: none;
-      margin-top: 20px;
-      padding: 12px 20px;
-      font-size: 16px;
-      background-color: #28a745;
+      background-color: #e74c3c;
       color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
     }
 
-    #submitBtn:hover {
-      background-color: #218838;
+    .time-slot.unavailable {
+      background-color: #f9f9f9;
+      color: #ccc;
+      cursor: not-allowed;
+      text-decoration: line-through;
     }
 
     .no-available {
       margin-top: 20px;
       font-size: 14px;
-      color: #ccc;
+      color: #666;
+      text-align: center;
+    }
+
+    .submit-button {
+      width: 100%;
+      padding: 12px;
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: none;
+    }
+
+    .submit-button:hover {
+      background-color: #c0392b;
     }
   </style>
 </head>
 <body>
+  <a href="almaty_masters_abai.html" class="back-button">← Назад</a>
 
-<p class="p button_back"><a href="almaty_masters_abai.html">< Назад</a></p>
-<h2 id="header">Загрузка...</h2>
+  <div class="specialist-info">
+    <h2 id="header">Запись к: <span id="specialistName">Загрузка...</span></h2>
+  </div>
 
-<div id="calendar"></div>
+  <div class="calendar-container">
+    <div class="calendar-header">
+      <div class="month-nav" id="prevMonth">❮</div>
+      <div class="calendar-month" id="currentMonth">Июль</div>
+      <div class="month-nav" id="nextMonth">❯</div>
+    </div>
 
-<div id="timeContainer" style="display:none;">
-  <h3>Выберите время</h3>
-  <div id="timeGrid" class="time-grid"></div>
-  <div id="noAvailableMsg" class="no-available" style="display: none;">Нет доступного времени на эту дату.</div>
-</div>
+    <div class="weekdays">
+      <div class="weekday">Пн</div>
+      <div class="weekday">Вт</div>
+      <div class="weekday">Ср</div>
+      <div class="weekday">Чт</div>
+      <div class="weekday">Пт</div>
+      <div class="weekday">Сб</div>
+      <div class="weekday">Вс</div>
+    </div>
 
-<button id="submitBtn">Подтвердить</button>
+    <div class="days-grid" id="daysGrid">
+      <!-- Дни будут добавлены через JavaScript -->
+    </div>
+  </div>
 
-<!-- Flatpickr + локализация -->
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ru.js"></script>
+  <div class="time-container" id="timeContainer">
+    <h3>Выберите время</h3>
+    <div id="timeGrid" class="time-grid"></div>
+    <div id="noAvailableMsg" class="no-available" style="display: none;">Нет доступного времени на эту дату</div>
+  </div>
 
-<script>
-  const schedules = {
-    "Специалист 1": {
-      "2025-07-26": [],
-      "2025-07-27": []
-    },
-    "Специалист 2": {
-      "2025-07-26": ["11:00"]
-    }
-  };
+  <button id="submitBtn" class="submit-button">Подтвердить запись</button>
 
-  // Загрузка из localStorage
-  const saved = localStorage.getItem("bookingData");
-  if (saved) {
-    const parsed = JSON.parse(saved);
-    for (const person in parsed) {
-      if (!schedules[person]) schedules[person] = {};
-      for (const date in parsed[person]) {
-        if (!schedules[person][date]) schedules[person][date] = [];
-        schedules[person][date].push(...parsed[person][date]);
+  <script>
+    const schedules = {
+      "Специалист 1": {
+        "2025-07-26": [],
+        "2025-07-27": []
+      },
+      "Специалист 2": {
+        "2025-07-26": ["11:00"]
       }
-    }
-  }
+    };
 
-  const params = new URLSearchParams(window.location.search);
-  const specialist = params.get("specialist") || "Специалист 1";
-  const header = document.getElementById("header");
-  header.innerText = `Запись к: ${specialist}`;
-
-  let selectedDate = null;
-  let selectedTime = null;
-  let calendar;
-
-  function getAllTimeSlots(start = 9, end = 18, interval = 15) {
-    const times = [];
-    for (let h = start; h < end; h++) {
-      for (let m = 0; m < 60; m += interval) {
-        times.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
-      }
-    }
-    return times;
-  }
-
-  function getFullyBookedDates() {
-    const specialistSchedule = schedules[specialist] || {};
-    const fullyBooked = [];
-    const fullDay = getAllTimeSlots();
-
-    for (const [date, times] of Object.entries(specialistSchedule)) {
-      const unique = [...new Set(times)];
-      if (unique.length >= fullDay.length) {
-        fullyBooked.push(date);
+    // Загрузка из localStorage
+    const saved = localStorage.getItem("bookingData");
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      for (const person in parsed) {
+        if (!schedules[person]) schedules[person] = {};
+        for (const date in parsed[person]) {
+          if (!schedules[person][date]) schedules[person][date] = [];
+          schedules[person][date].push(...parsed[person][date]);
+        }
       }
     }
 
-    return fullyBooked;
-  }
+    const params = new URLSearchParams(window.location.search);
+    const specialist = params.get("specialist") || "Специалист 1";
+    document.getElementById("specialistName").textContent = specialist;
 
-  calendar = flatpickr("#calendar", {
-    inline: true,
-    locale: "ru",
-    minDate: "today",
-    disable: getFullyBookedDates(),
-    onChange: function(selectedDates, dateStr) {
-      selectedDate = dateStr;
-      showTimeSlots();
-    }
-  });
+    let selectedDate = null;
+    let selectedTime = null;
+    let currentDate = new Date();
 
-  function showTimeSlots() {
-    const container = document.getElementById("timeGrid");
-    const wrapper = document.getElementById("timeContainer");
-    const msg = document.getElementById("noAvailableMsg");
-    container.innerHTML = "";
-    document.getElementById("submitBtn").style.display = "none";
-    selectedTime = null;
+    // Названия месяцев
+    const monthNames = [
+      "Январь", "Февраль", "Март", "Апрель",
+      "Май", "Июнь", "Июль", "Август",
+      "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
+    ];
 
-    const allTimes = getAllTimeSlots();
-    const busyTimes = (schedules[specialist] && schedules[specialist][selectedDate]) || [];
-    const freeTimes = allTimes.filter(t => !busyTimes.includes(t));
-
-    if (freeTimes.length === 0) {
-      msg.style.display = "block";
-      wrapper.style.display = "block";
-      return;
+    function getAllTimeSlots(start = 9, end = 22, interval = 60) {
+      const times = [];
+      for (let h = start; h < end; h++) {
+        for (let m = 0; m < 60; m += interval) {
+          times.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
+        }
+      }
+      return times;
     }
 
-    msg.style.display = "none";
+    function getFullyBookedDates() {
+      const specialistSchedule = schedules[specialist] || {};
+      const fullyBooked = [];
+      const fullDay = getAllTimeSlots();
 
-    freeTimes.forEach(time => {
-      const div = document.createElement("div");
-      div.classList.add("time-slot");
-      div.textContent = time;
-      div.addEventListener("click", () => {
-        document.querySelectorAll(".time-slot").forEach(el => el.classList.remove("selected"));
-        div.classList.add("selected");
-        selectedTime = time;
-        document.getElementById("submitBtn").style.display = "inline-block";
+      for (const [date, times] of Object.entries(specialistSchedule)) {
+        const unique = [...new Set(times)];
+        if (unique.length >= fullDay.length) {
+          fullyBooked.push(date);
+        }
+      }
+
+      return fullyBooked;
+    }
+
+    function initCalendar() {
+      const daysGrid = document.getElementById('daysGrid');
+      daysGrid.innerHTML = '';
+
+      document.getElementById('currentMonth').textContent = monthNames[currentDate.getMonth()];
+
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth();
+      const today = new Date();
+
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      const daysInMonth = lastDay.getDate();
+      const firstDayOfWeek = firstDay.getDay();
+      const startDay = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1;
+
+      const fullyBookedDates = getFullyBookedDates();
+
+      for (let i = 0; i < startDay; i++) {
+        const prevMonthDay = new Date(year, month, 0).getDate() - startDay + i + 1;
+        const dayElement = document.createElement('div');
+        dayElement.className = 'day other-month';
+        dayElement.textContent = prevMonthDay;
+        daysGrid.appendChild(dayElement);
+      }
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const dayElement = document.createElement('div');
+
+        if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+          dayElement.classList.add('today');
+        }
+
+        if (fullyBookedDates.includes(dateStr) || new Date(year, month, day) < today) {
+          dayElement.className = 'day disabled';
+          dayElement.textContent = day;
+        } else {
+          dayElement.className = 'day';
+          dayElement.textContent = day;
+
+          dayElement.addEventListener('click', () => {
+            document.querySelectorAll('.day').forEach(el => el.classList.remove('selected'));
+            dayElement.classList.add('selected');
+
+            selectedDate = dateStr;
+            showTimeSlots();
+          });
+        }
+
+        daysGrid.appendChild(dayElement);
+      }
+
+      const totalCells = Math.ceil((daysInMonth + startDay) / 7) * 7;
+      const remainingCells = totalCells - (daysInMonth + startDay);
+
+      for (let i = 1; i <= remainingCells; i++) {
+        const dayElement = document.createElement('div');
+        dayElement.className = 'day other-month';
+        dayElement.textContent = i;
+        daysGrid.appendChild(dayElement);
+      }
+    }
+
+    function showTimeSlots() {
+      const container = document.getElementById("timeGrid");
+      const wrapper = document.getElementById("timeContainer");
+      const msg = document.getElementById("noAvailableMsg");
+      const submitBtn = document.getElementById("submitBtn");
+
+      container.innerHTML = "";
+      submitBtn.style.display = "none";
+      selectedTime = null;
+
+      const allTimes = getAllTimeSlots();
+      const busyTimes = (schedules[specialist] && schedules[specialist][selectedDate]) || [];
+      const freeTimes = allTimes.filter(t => !busyTimes.includes(t));
+
+      if (freeTimes.length === 0) {
+        msg.style.display = "block";
+        wrapper.style.display = "block";
+        return;
+      }
+
+      msg.style.display = "none";
+
+      freeTimes.forEach(time => {
+        const div = document.createElement("div");
+        div.classList.add("time-slot");
+        div.textContent = time;
+        div.addEventListener("click", () => {
+          document.querySelectorAll(".time-slot").forEach(el => el.classList.remove("selected"));
+          div.classList.add("selected");
+          selectedTime = time;
+          submitBtn.style.display = "block";
+        });
+        container.appendChild(div);
       });
-      container.appendChild(div);
-    });
 
-    wrapper.style.display = "block";
-  }
-
-  document.getElementById("submitBtn").addEventListener("click", () => {
-    if (!selectedDate || !selectedTime) return;
-
-    const payload = JSON.stringify({
-      specialist,
-      datetime: `${selectedDate} ${selectedTime}`
-    });
-
-    const timeToMinutes = t => {
-      const [h, m] = t.split(":").map(Number);
-      return h * 60 + m;
-    };
-    const minutesToTime = m => {
-      const h = Math.floor(m / 60);
-      const min = m % 60;
-      return `${String(h).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
-    };
-
-    const base = timeToMinutes(selectedTime);
-    const toBlock = [0, 15, 30].map(offset => minutesToTime(base + offset));
-
-    if (!schedules[specialist]) schedules[specialist] = {};
-    if (!schedules[specialist][selectedDate]) schedules[specialist][selectedDate] = [];
-
-    toBlock.forEach(t => {
-      if (!schedules[specialist][selectedDate].includes(t)) {
-        schedules[specialist][selectedDate].push(t);
-      }
-    });
-
-    // Сохранение в localStorage
-    const localData = JSON.parse(localStorage.getItem("bookingData") || "{}");
-    if (!localData[specialist]) localData[specialist] = {};
-    if (!localData[specialist][selectedDate]) localData[specialist][selectedDate] = [];
-    toBlock.forEach(t => {
-      if (!localData[specialist][selectedDate].includes(t)) {
-        localData[specialist][selectedDate].push(t);
-      }
-    });
-    localStorage.setItem("bookingData", JSON.stringify(localData));
-
-    showTimeSlots();
-    calendar.set("disable", getFullyBookedDates());
-
-    // Telegram WebApp или обычный браузер
-    if (window.Telegram && Telegram.WebApp) {
-      Telegram.WebApp.sendData(payload);
-      Telegram.WebApp.close();
+      wrapper.style.display = "block";
     }
 
-    // Переход обратно
-    window.location.href = "index.html";
-  });
-</script>
+    document.getElementById("submitBtn").addEventListener("click", () => {
+      if (!selectedDate || !selectedTime) return;
 
+      const payload = JSON.stringify({
+        specialist,
+        datetime: `${selectedDate} ${selectedTime}`
+      });
+
+      const timeToMinutes = t => {
+        const [h, m] = t.split(":").map(Number);
+        return h * 60 + m;
+      };
+      const minutesToTime = m => {
+        const h = Math.floor(m / 60);
+        const min = m % 60;
+        return `${String(h).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
+      };
+
+      const base = timeToMinutes(selectedTime);
+      const toBlock = [0, 15, 30].map(offset => minutesToTime(base + offset));
+
+      if (!schedules[specialist]) schedules[specialist] = {};
+      if (!schedules[specialist][selectedDate]) schedules[specialist][selectedDate] = [];
+
+      toBlock.forEach(t => {
+        if (!schedules[specialist][selectedDate].includes(t)) {
+          schedules[specialist][selectedDate].push(t);
+        }
+      });
+
+      const localData = JSON.parse(localStorage.getItem("bookingData") || "{}");
+      if (!localData[specialist]) localData[specialist] = {};
+      if (!localData[specialist][selectedDate]) localData[specialist][selectedDate] = [];
+      toBlock.forEach(t => {
+        if (!localData[specialist][selectedDate].includes(t)) {
+          localData[specialist][selectedDate].push(t);
+        }
+      });
+      localStorage.setItem("bookingData", JSON.stringify(localData));
+
+      if (window.Telegram && Telegram.WebApp) {
+        Telegram.WebApp.sendData(payload);
+        Telegram.WebApp.close();
+      } else {
+        alert("Запись успешно оформлена!");
+        window.location.href = "index.html";
+      }
+    });
+
+    document.getElementById("prevMonth").addEventListener('click', () => {
+      currentDate.setMonth(currentDate.getMonth() - 1);
+      initCalendar();
+    });
+
+    document.getElementById("nextMonth").addEventListener('click', () => {
+      currentDate.setMonth(currentDate.getMonth() + 1);
+      initCalendar();
+    });
+
+    window.addEventListener('DOMContentLoaded', initCalendar);
+  </script>
 </body>
 </html>

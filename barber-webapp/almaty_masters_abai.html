@@ -5,119 +5,159 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Выбрать специалиста</title>
   <style>
-    .menu-button {
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 16px;
+      background-color: #f5f5f5;
+    }
+
+    .back-button {
+      display: inline-block;
+      padding: 8px 16px;
+      margin-bottom: 20px;
+      background-color: #f0f0f0;
+      border: none;
+      border-radius: 20px;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      text-decoration: none;
+      color: #333;
+    }
+
+    h3 {
+      margin: 0 0 20px 0;
+      color: #333;
+    }
+
+    .specialist-card {
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      width: 100%;
-      max-width: 300px;
-      padding: 10px 16px;
-      margin-bottom: 10px;
-      font-size: 16px;
-      background: #ffffff;
-      border: 1px solid #ccc;
-      border-radius: 8px;
       cursor: pointer;
-      font-family: sans-serif;
+      transition: all 0.3s;
     }
 
-    .left-content {
+    .specialist-card:hover {
+      background-color: #f9f9f9;
+    }
+
+    .specialist-info {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
     }
 
-    .circle-icon {
-      width: 18px;
-      height: 18px;
-    }
-
-    #dateTimeButton {
-      display: none;
-      margin-top: 20px;
-      padding: 12px 20px;
+    .specialist-name {
+      font-weight: bold;
       font-size: 16px;
-      background-color: #007BFF;
+      color: #333;
+    }
+
+    .selection-indicator {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #666;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .selection-indicator.selected {
+      border-color: #e74c3c;
+      background-color: #e74c3c;
+    }
+
+    .selection-indicator.selected::after {
+      content: "";
+      display: block;
+      width: 10px;
+      height: 10px;
+      background-color: white;
+      border-radius: 50%;
+    }
+
+    .continue-button {
+      width: 100%;
+      padding: 12px;
+      background-color: #e74c3c;
       color: white;
       border: none;
       border-radius: 6px;
+      font-size: 16px;
       cursor: pointer;
-      font-family: sans-serif;
+      transition: all 0.3s;
+      margin-top: 16px;
+      display: none;
     }
 
-    #dateTimeButton.show {
+    .continue-button:hover {
+      background-color: #c0392b;
+    }
+
+    .continue-button.show {
       display: block;
     }
   </style>
 </head>
 <body>
+  <a href="almaty_abai.html" class="back-button">← Назад</a>
+  <h3>Выбрать специалиста</h3>
 
-<p><a href="almaty_abai.html">< Назад</a></p>
-<h3>Выбрать специалиста</h3>
+  <div class="specialist-card" onclick="selectSpecialist(this, 'Специалист 1')">
+    <div class="specialist-info">
+      <div class="specialist-name">Специалист 1</div>
+    </div>
+    <div class="selection-indicator"></div>
+  </div>
 
-<button class="menu-button" onclick="toggleSelection(this)">
-  <span class="left-content">Специалист 1</span>
-  <span class="right-icon">
-    <svg class="circle-icon" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
-      <circle cx="12" cy="12" r="9"/>
-    </svg>
-  </span>
-</button>
+  <div class="specialist-card" onclick="selectSpecialist(this, 'Специалист 2')">
+    <div class="specialist-info">
+      <div class="specialist-name">Специалист 2</div>
+    </div>
+    <div class="selection-indicator"></div>
+  </div>
 
-<button class="menu-button" onclick="toggleSelection(this)">
-  <span class="left-content">Специалист 2</span>
-  <span class="right-icon">
-    <svg class="circle-icon" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
-      <circle cx="12" cy="12" r="9"/>
-    </svg>
-  </span>
-</button>
+  <div class="specialist-card" onclick="selectSpecialist(this, 'Специалист 3')">
+    <div class="specialist-info">
+      <div class="specialist-name">Специалист 3</div>
+    </div>
+    <div class="selection-indicator"></div>
+  </div>
 
-<button class="menu-button" onclick="toggleSelection(this)">
-  <span class="left-content">Специалист 3</span>
-  <span class="right-icon">
-    <svg class="circle-icon" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
-      <circle cx="12" cy="12" r="9"/>
-    </svg>
-  </span>
-</button>
+  <button id="continueButton" class="continue-button">Выбрать дату и время</button>
 
-<button id="dateTimeButton">Выбрать дату и время</button>
+  <script>
+    let selectedSpecialist = null;
 
-<script>
-  let selectedSpecialist = null;
+    function selectSpecialist(card, specialist) {
+      // Сброс выбора для всех карточек
+      document.querySelectorAll('.specialist-card').forEach(c => {
+        c.querySelector('.selection-indicator').classList.remove('selected');
+      });
 
-  function toggleSelection(selectedButton) {
+      // Выбор текущей карточки
+      card.querySelector('.selection-indicator').classList.add('selected');
+      selectedSpecialist = specialist;
 
-    document.querySelectorAll(".menu-button").forEach(button => {
-      button.querySelector(".right-icon").innerHTML = `
-        <svg class="circle-icon" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
-          <circle cx="12" cy="12" r="9"/>
-        </svg>
-      `;
-    });
-
-    const icon = selectedButton.querySelector(".right-icon");
-    icon.innerHTML = `
-      <svg class="circle-icon" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
-        <circle cx="12" cy="12" r="9"/>
-        <circle cx="12" cy="12" r="5" fill="black"/>
-      </svg>
-    `;
-
-    selectedSpecialist = selectedButton.querySelector(".left-content").innerText.trim();
-
-    // Показать кнопку
-    document.getElementById("dateTimeButton").classList.add("show");
-  }
-
-  document.getElementById("dateTimeButton").addEventListener("click", function () {
-    if (selectedSpecialist) {
-      const url = `calendar_masters_abai.html?specialist=${encodeURIComponent(selectedSpecialist)}`;
-      window.location.href = url;
+      // Показываем кнопку продолжения
+      document.getElementById('continueButton').classList.add('show');
     }
-  });
-</script>
 
+    document.getElementById('continueButton').addEventListener('click', function() {
+      if (selectedSpecialist) {
+        window.location.href = `calendar_masters_abai.html?specialist=${encodeURIComponent(selectedSpecialist)}`;
+      }
+    });
+  </script>
 </body>
 </html>

@@ -1,209 +1,379 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <title>Выбор даты и времени</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css" />
-  <style>
-    body {
-      background-color: #1e1e2f;
-      color: white;
-      font-family: sans-serif;
-      padding: 20px;
-      text-align: center;
-    }
-    .time-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-    .time-slot { padding: 10px; background-color: #333; border-radius: 6px; cursor: pointer; }
-    .time-slot:hover, .time-slot.selected { background-color: #007BFF; }
-    #continueBtn {
-      display: none;
-      margin-top: 20px;
-      padding: 12px 20px;
-      font-size: 16px;
-      background-color: #28a745;
-      border-radius: 6px;
-      cursor: pointer;
-      color: white;
-      border: none;
-    }
-    #continueBtn:hover { background-color: #218838; }
-    #timeContainer { margin-top: 20px; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Выбор даты и времени</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 16px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
 
-    /* Custom calendar styling to match the second screenshot */
-    .flatpickr-calendar {
-      background: transparent;
-      box-shadow: none;
-      width: 100%;
-    }
-    .flatpickr-month {
-      color: white;
-      height: 40px;
-      margin-bottom: 10px;
-    }
-    .flatpickr-weekdays {
-      background-color: transparent;
-      border-bottom: none;
-    }
-    .flatpickr-weekday {
-      color: white;
-    }
-    .flatpickr-day {
-      color: white;
-      border: none;
-      max-width: none;
-      height: 40px;
-      line-height: 40px;
-    }
-    .flatpickr-day:hover {
-      background: #007BFF;
-    }
-    .flatpickr-day.selected {
-      background: #007BFF;
-      border-color: #007BFF;
-    }
-    .flatpickr-day.inRange {
-      box-shadow: none;
-      background: rgba(0, 123, 255, 0.2);
-    }
-    .flatpickr-months .flatpickr-month {
-      height: 40px;
-    }
-    .flatpickr-current-month {
-      padding-top: 0;
-    }
-    .flatpickr-current-month .flatpickr-monthDropdown-months {
-      appearance: none;
-      background: transparent;
-      color: white;
-      border: none;
-      font-size: 16px;
-    }
-    .flatpickr-current-month input.cur-year {
-      color: white;
-      font-size: 16px;
-    }
-    .flatpickr-prev-month, .flatpickr-next-month {
-      color: white;
-      fill: white;
-    }
-    .flatpickr-prev-month:hover, .flatpickr-next-month:hover {
-      color: #007BFF;
-      fill: #007BFF;
-    }
-    .dayContainer {
-      width: 100%;
-      min-width: 100%;
-    }
-    .flatpickr-innerContainer {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .flatpickr-rContainer {
-      width: 100%;
-    }
-    .flatpickr-days {
-      width: 100%;
-    }
-  </style>
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            margin-bottom: 20px;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-decoration: none;
+            color: #333;
+        }
+
+        h2 {
+            margin: 0 0 20px 0;
+            color: #333;
+            text-align: left;
+        }
+
+        .calendar-container {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .month-nav {
+            cursor: pointer;
+            font-size: 18px;
+            color: #e74c3c;
+            user-select: none;
+            padding: 8px;
+        }
+
+        .calendar-month {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .weekday {
+            text-align: center;
+        }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .day {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .day:hover {
+            background-color: #f0f0f0;
+        }
+
+        .day.other-month {
+            color: #ccc;
+        }
+
+        .day.selected {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .day.today {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+
+        .day.unavailable {
+            color: #ccc;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+
+        .time-container {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: none;
+        }
+
+        .time-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .time-slot {
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .time-slot:hover {
+            background-color: #f0f0f0;
+        }
+
+        .time-slot.selected {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .time-slot.unavailable {
+            background-color: #f9f9f9;
+            color: #ccc;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+
+        .continue-button {
+            display: none;
+            width: 100%;
+            padding: 12px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 16px;
+        }
+
+        .continue-button:hover {
+            background-color: #c0392b;
+        }
+    </style>
 </head>
 <body>
-<p><a href="almaty_abai.html">< Назад</a></p>
-<h2>Выберите дату и время</h2>
-<div id="calendar"></div>
-<div id="timeContainer" style="display:none;">
-  <h3>Выберите время</h3>
-  <div id="timeGrid" class="time-grid"></div>
-</div>
-<button id="continueBtn">Выбрать специалиста</button>
+    <a href="almaty_abai.html" class="back-button">← Назад</a>
+    <h2>Выберите дату и время</h2>
 
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ru.js"></script>
-<script>
-  // Загрузка данных бронирований из localStorage
-  const bookings = JSON.parse(localStorage.getItem("bookingData") || "{}");
-  const specialists = ["Специалист 1", "Специалист 2"];
+    <div class="calendar-container">
+        <div class="calendar-header">
+            <div class="month-nav" id="prevMonth">❮</div>
+            <div class="calendar-month" id="currentMonth">Июль</div>
+            <div class="month-nav" id="nextMonth">❯</div>
+        </div>
 
-  let selectedDate = null;
-  let selectedTime = null;
+        <div class="weekdays">
+            <div class="weekday">Пн</div>
+            <div class="weekday">Вт</div>
+            <div class="weekday">Ср</div>
+            <div class="weekday">Чт</div>
+            <div class="weekday">Пт</div>
+            <div class="weekday">Сб</div>
+            <div class="weekday">Вс</div>
+        </div>
 
-  // Проверка, занято ли время всеми мастерами
-  function isTimeFullyBooked(date, time) {
-    return specialists.every(specialist => {
-      const specialistBookings = bookings[specialist] || {};
-      const dateBookings = specialistBookings[date] || [];
-      return dateBookings.includes(time);
-    });
-  }
+        <div class="days-grid" id="daysGrid">
+            <!-- Дни будут добавлены через JavaScript -->
+        </div>
+    </div>
 
-  // Генерация временных слотов (09:00 - 18:00, с шагом 15 минут)
-  function getAllTimeSlots(start = 9, end = 21, interval = 60) {
-    const times = [];
-    for (let h = start; h < end; h++) {
-      for (let m = 0; m < 60; m += interval) {
-        times.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
-      }
-    }
-    return times;
-  }
+    <div class="time-container" id="timeContainer">
+        <h3>Выберите время</h3>
+        <div class="time-grid" id="timeGrid"></div>
+    </div>
 
-  // Инициализация календаря
-  flatpickr("#calendar", {
-    inline: true,
-    locale: "ru",
-    minDate: "today",
-    onChange: function(selectedDates, dateStr) {
-      selectedDate = dateStr;
-      selectedTime = null;
-      renderTimeSlots();
-    }
-  });
+    <button class="continue-button" id="continueBtn">Выбрать специалиста</button>
 
-  // Отрисовка временных слотов (с фильтрацией занятых)
-  function renderTimeSlots() {
-    const container = document.getElementById("timeGrid");
-    const wrapper = document.getElementById("timeContainer");
-    const button = document.getElementById("continueBtn");
+    <script>
+        // Загрузка данных бронирований из localStorage
+        const bookings = JSON.parse(localStorage.getItem("bookingData") || "{}");
+        const specialists = ["Специалист 1", "Специалист 2"];
 
-    container.innerHTML = "";
-    button.style.display = "none";
+        let selectedDate = null;
+        let selectedTime = null;
+        let currentDate = new Date(); // Текущая дата
 
-    if (!selectedDate) {
-      wrapper.style.display = "none";
-      return;
-    }
+        // Названия месяцев
+        const monthNames = [
+            "Январь", "Февраль", "Март", "Апрель",
+            "Май", "Июнь", "Июль", "Август",
+            "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
+        ];
 
-    const allTimes = getAllTimeSlots();
-    const availableTimes = allTimes.filter(time => !isTimeFullyBooked(selectedDate, time));
+        // Проверка, занято ли время всеми мастерами
+        function isTimeFullyBooked(date, time) {
+            return specialists.every(specialist => {
+                const specialistBookings = bookings[specialist] || {};
+                const dateBookings = specialistBookings[date] || [];
+                return dateBookings.includes(time);
+            });
+        }
 
-    if (availableTimes.length === 0) {
-      wrapper.style.display = "none";
-      return;
-    }
+        // Генерация временных слотов (09:00 - 18:00, с шагом 60 минут)
+        function getAllTimeSlots(start = 9, end = 22, interval = 60) {
+            const times = [];
+            for (let h = start; h < end; h++) {
+                for (let m = 0; m < 60; m += interval) {
+                    times.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
+                }
+            }
+            return times;
+        }
 
-    availableTimes.forEach(time => {
-      const div = document.createElement("div");
-      div.className = "time-slot";
-      div.textContent = time;
-      div.onclick = () => {
-        document.querySelectorAll(".time-slot").forEach(el => el.classList.remove("selected"));
-        div.classList.add("selected");
-        selectedTime = time;
-        button.style.display = "inline-block";
-      };
-      container.appendChild(div);
-    });
+        // Инициализация календаря
+        function initCalendar() {
+            const daysGrid = document.getElementById('daysGrid');
+            daysGrid.innerHTML = '';
 
-    wrapper.style.display = "block";
-  }
+            // Обновляем отображаемый месяц
+            document.getElementById('currentMonth').textContent = monthNames[currentDate.getMonth()];
 
-  // Переход к выбору мастера
-  document.getElementById("continueBtn").onclick = () => {
-    if (!selectedDate || !selectedTime) return;
-    window.location.href = `select_masters_abai.html?date=${selectedDate}&time=${selectedTime}`;
-  };
-</script>
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+
+            // Первый день месяца
+            const firstDay = new Date(year, month, 1);
+            // Последний день месяца
+            const lastDay = new Date(year, month + 1, 0);
+            // Дней в месяце
+            const daysInMonth = lastDay.getDate();
+            // Первый день недели месяца (0 - воскресенье, 1 - понедельник и т.д.)
+            const firstDayOfWeek = firstDay.getDay();
+            // Корректировка для недели, начинающейся с понедельника
+            const startDay = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1;
+
+            // Добавляем пустые ячейки для дней предыдущего месяца
+            for (let i = 0; i < startDay; i++) {
+                const prevMonthDay = new Date(year, month, 0).getDate() - startDay + i + 1;
+                const dayElement = document.createElement('div');
+                dayElement.className = 'day other-month';
+                dayElement.textContent = prevMonthDay;
+                daysGrid.appendChild(dayElement);
+            }
+
+            // Добавляем дни текущего месяца
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'day';
+                dayElement.textContent = day;
+
+                // Проверяем, является ли день сегодняшним
+                const today = new Date();
+                if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                    dayElement.classList.add('today');
+                }
+
+                dayElement.addEventListener('click', () => {
+                    document.querySelectorAll('.day').forEach(el => el.classList.remove('selected'));
+                    dayElement.classList.add('selected');
+
+                    // Форматируем дату как YYYY-MM-DD
+                    selectedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    selectedTime = null;
+                    renderTimeSlots();
+                });
+
+                daysGrid.appendChild(dayElement);
+            }
+
+            // Добавляем дни следующего месяца, если нужно
+            const totalCells = Math.ceil((daysInMonth + startDay) / 7) * 7;
+            const remainingCells = totalCells - (daysInMonth + startDay);
+
+            for (let i = 1; i <= remainingCells; i++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'day other-month';
+                dayElement.textContent = i;
+                daysGrid.appendChild(dayElement);
+            }
+        }
+
+        // Отрисовка временных слотов (с фильтрацией занятых)
+        function renderTimeSlots() {
+            const container = document.getElementById("timeGrid");
+            const wrapper = document.getElementById("timeContainer");
+            const button = document.getElementById("continueBtn");
+
+            container.innerHTML = "";
+            button.style.display = "none";
+
+            if (!selectedDate) {
+                wrapper.style.display = "none";
+                return;
+            }
+
+            const allTimes = getAllTimeSlots();
+            const availableTimes = allTimes.filter(time => !isTimeFullyBooked(selectedDate, time));
+
+            if (availableTimes.length === 0) {
+                wrapper.style.display = "none";
+                return;
+            }
+
+            availableTimes.forEach(time => {
+                const div = document.createElement("div");
+                div.className = "time-slot";
+                div.textContent = time;
+                div.onclick = () => {
+                    document.querySelectorAll(".time-slot").forEach(el => el.classList.remove("selected"));
+                    div.classList.add("selected");
+                    selectedTime = time;
+                    button.style.display = "block";
+                };
+                container.appendChild(div);
+            });
+
+            wrapper.style.display = "block";
+        }
+
+        // Переход к выбору мастера
+        document.getElementById("continueBtn").onclick = () => {
+            if (!selectedDate || !selectedTime) return;
+            window.location.href = `select_masters_abai.html?date=${selectedDate}&time=${selectedTime}`;
+        };
+
+        // Обработчики для кнопок переключения месяцев
+        document.getElementById("prevMonth").addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            initCalendar();
+        });
+
+        document.getElementById("nextMonth").addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            initCalendar();
+        });
+
+        // Инициализируем календарь при загрузке
+        window.addEventListener('DOMContentLoaded', initCalendar);
+    </script>
 </body>
 </html>
