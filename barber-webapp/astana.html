@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Филиалы в Астане</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    h2 {
+      text-align: center;
+    }
+    .branch {
+      background: white;
+      margin: 20px 0;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    iframe {
+      width: 100%;
+      height: 200px;
+      border: none;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    button {
+      background: #50a8eb;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<p class="p button_back"><a href="index.html">< Назад</a></p>
+
+  <h2>Филиалы в Астане</h2>
+
+  <div class="branch">
+    <iframe src="https://maps.google.com/maps?q=ул.%20Абая%2010,%20Алматы&z=15&output=embed"></iframe>
+    <p><strong>📍 ул. Абая, 10</strong></p>
+    <button onclick="chooseBranch('Алматы, ул. Абая 10')">Выбрать</button>
+  </div>
+
+  <div class="branch">
+    <iframe src="https://maps.google.com/maps?q=проспект%20Назарбаева%2055,%20Алматы&z=15&output=embed"></iframe>
+    <p><strong>📍 пр. Назарбаева, 55</strong></p>
+    <button onclick="chooseBranch('Алматы, пр. Назарбаева 55')">Выбрать</button>
+  </div>
+
+  <script>
+    function chooseBranch(branch) {
+      const data = JSON.stringify({ branch });
+      if (window.Telegram.WebApp) {
+        Telegram.WebApp.sendData(data);
+        Telegram.WebApp.close();
+      } else {
+        alert("WebApp API не найден.");
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Выбор даты и времени</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css" />
+  <style>
+    body {
+      background-color: #1e1e2f;
+      color: white;
+      font-family: sans-serif;
+      padding: 20px;
+      text-align: center;
+    }
+    .time-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .time-slot { padding: 10px; background-color: #333; border-radius: 6px; cursor: pointer; }
+    .time-slot:hover, .time-slot.selected { background-color: #007BFF; }
+    #continueBtn {
+      display: none;
+      margin-top: 20px;
+      padding: 12px 20px;
+      font-size: 16px;
+      background-color: #28a745;
+      border-radius: 6px;
+      cursor: pointer;
+      color: white;
+      border: none;
+    }
+    #continueBtn:hover { background-color: #218838; }
+    #timeContainer { margin-top: 20px; }
+  </style>
+</head>
+<body>
+<p><a href="almaty_abai.html">< Назад</a></p>
+<h2>Выберите дату и время</h2>
+<div id="calendar"></div>
+<div id="timeContainer" style="display:none;">
+  <h3>Выберите время</h3>
+  <div id="timeGrid" class="time-grid"></div>
+</div>
+<button id="continueBtn">Выбрать специалиста</button>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ru.js"></script>
+<script>
+  // Загрузка данных бронирований из localStorage
+  const bookings = JSON.parse(localStorage.getItem("bookingData") || "{}");
+  const specialists = ["Специалист 1", "Специалист 2"];
+
+  let selectedDate = null;
+  let selectedTime = null;
+
+  // Проверка, занято ли время всеми мастерами
+  function isTimeFullyBooked(date, time) {
+    return specialists.every(specialist => {
+      const specialistBookings = bookings[specialist] || {};
+      const dateBookings = specialistBookings[date] || [];
+      return dateBookings.includes(time);
+    });
+  }
+
+  // Генерация временных слотов (09:00 - 18:00, с шагом 15 минут)
+  function getAllTimeSlots(start = 9, end = 18, interval = 15) {
+    const times = [];
+    for (let h = start; h < end; h++) {
+      for (let m = 0; m < 60; m += interval) {
+        times.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
+      }
+    }
+    return times;
+  }
+
+  // Инициализация календаря
+  flatpickr("#calendar", {
+    inline: true,
+    locale: "ru",
+    minDate: "today",
+    onChange: function(selectedDates, dateStr) {
+      selectedDate = dateStr;
+      selectedTime = null;
+      renderTimeSlots();
+    }
+  });
+
+  // Отрисовка временных слотов (с фильтрацией занятых)
+  function renderTimeSlots() {
+    const container = document.getElementById("timeGrid");
+    const wrapper = document.getElementById("timeContainer");
+    const button = document.getElementById("continueBtn");
+
+    container.innerHTML = "";
+    button.style.display = "none";
+
+    if (!selectedDate) {
+      wrapper.style.display = "none";
+      return;
+    }
+
+    const allTimes = getAllTimeSlots();
+    const availableTimes = allTimes.filter(time => !isTimeFullyBooked(selectedDate, time));
+
+    if (availableTimes.length === 0) {
+      wrapper.style.display = "none";
+      return;
+    }
+
+    availableTimes.forEach(time => {
+      const div = document.createElement("div");
+      div.className = "time-slot";
+      div.textContent = time;
+      div.onclick = () => {
+        document.querySelectorAll(".time-slot").forEach(el => el.classList.remove("selected"));
+        div.classList.add("selected");
+        selectedTime = time;
+        button.style.display = "inline-block";
+      };
+      container.appendChild(div);
+    });
+
+    wrapper.style.display = "block";
+  }
+
+  // Переход к выбору мастера
+  document.getElementById("continueBtn").onclick = () => {
+    if (!selectedDate || !selectedTime) return;
+    window.location.href = `select_masters_abai.html?date=${selectedDate}&time=${selectedTime}`;
+  };
+</script>
+</body>
+</html>

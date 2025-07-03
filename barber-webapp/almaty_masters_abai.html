@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Выбрать специалиста</title>
+  <style>
+    .menu-button {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 300px;
+      padding: 10px 16px;
+      margin-bottom: 10px;
+      font-size: 16px;
+      background: #ffffff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: sans-serif;
+    }
+
+    .left-content {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .circle-icon {
+      width: 18px;
+      height: 18px;
+    }
+
+    #dateTimeButton {
+      display: none;
+      margin-top: 20px;
+      padding: 12px 20px;
+      font-size: 16px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: sans-serif;
+    }
+
+    #dateTimeButton.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+<p><a href="almaty_abai.html">< Назад</a></p>
+<h3>Выбрать специалиста</h3>
+
+<button class="menu-button" onclick="toggleSelection(this)">
+  <span class="left-content">Специалист 1</span>
+  <span class="right-icon">
+    <svg class="circle-icon" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
+      <circle cx="12" cy="12" r="9"/>
+    </svg>
+  </span>
+</button>
+
+<button class="menu-button" onclick="toggleSelection(this)">
+  <span class="left-content">Специалист 2</span>
+  <span class="right-icon">
+    <svg class="circle-icon" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
+      <circle cx="12" cy="12" r="9"/>
+    </svg>
+  </span>
+</button>
+
+<button class="menu-button" onclick="toggleSelection(this)">
+  <span class="left-content">Специалист 3</span>
+  <span class="right-icon">
+    <svg class="circle-icon" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
+      <circle cx="12" cy="12" r="9"/>
+    </svg>
+  </span>
+</button>
+
+<button id="dateTimeButton">Выбрать дату и время</button>
+
+<script>
+  let selectedSpecialist = null;
+
+  function toggleSelection(selectedButton) {
+
+    document.querySelectorAll(".menu-button").forEach(button => {
+      button.querySelector(".right-icon").innerHTML = `
+        <svg class="circle-icon" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
+          <circle cx="12" cy="12" r="9"/>
+        </svg>
+      `;
+    });
+
+    const icon = selectedButton.querySelector(".right-icon");
+    icon.innerHTML = `
+      <svg class="circle-icon" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
+        <circle cx="12" cy="12" r="9"/>
+        <circle cx="12" cy="12" r="5" fill="black"/>
+      </svg>
+    `;
+
+    selectedSpecialist = selectedButton.querySelector(".left-content").innerText.trim();
+
+    // Показать кнопку
+    document.getElementById("dateTimeButton").classList.add("show");
+  }
+
+  document.getElementById("dateTimeButton").addEventListener("click", function () {
+    if (selectedSpecialist) {
+      const url = `calendar_masters_abai.html?specialist=${encodeURIComponent(selectedSpecialist)}`;
+      window.location.href = url;
+    }
+  });
+</script>
+
+</body>
+</html>

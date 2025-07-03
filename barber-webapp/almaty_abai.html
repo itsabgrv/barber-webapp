@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Инфо Алмата Абая 10</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 16px;
+            background-color: #f5f5f5;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            margin-bottom: 20px;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .back-button:hover {
+            background-color: #e0e0e0;
+        }
+
+        h3 {
+            margin: 20px 0 10px 0;
+            color: #333;
+        }
+
+        .menu-button {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .menu-button:hover {
+            background-color: #f9f9f9;
+        }
+
+        .arrow-down {
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid #666;
+        }
+
+        .left-content {
+            display: flex;
+            gap: 10px;
+        }
+
+        .location-icon {
+            color: #e74c3c;
+            font-size: 18px;
+        }
+
+        .branch-info {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .address {
+            color: #666;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<button class="back-button" onclick="location.href='almaty_filial.html'">← Назад</button>
+
+<h3>Город</h3>
+<button class="menu-button" onclick="location.href='index.html'">
+    <span class="left-content">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
+            <path fill="#e74c3c" d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5c-1.4 0-2.5-1.1-2.5-2.5S10.6 6.5 12 6.5s2.5 1.1 2.5 2.5S13.4 11.5 12 11.5z"/>
+        </svg>
+        <span>Алматы</span>
+    </span>
+    <span class="arrow-down"></span>
+</button>
+
+<h3>Филиал</h3>
+<button class="menu-button" onclick="location.href='almaty_filial.html'">
+    <span class="left-content">
+        <span>
+            <div class="branch-info">BROS & BLADES АL</div>
+            <div class="address">ул. Абая дом 10</div>
+        </span>
+    </span>
+    <span class="arrow-down"></span>
+</button>
+
+<h3>Дата</h3>
+<button class="menu-button" onclick="location.href='calendar_abai.html'">
+    <span class="left-content">
+        <span>📅 Выберите дату</span>
+    </span>
+    <span class="arrow-down"></span>
+</button>
+
+<h3>Мастер</h3>
+<button class="menu-button" onclick="location.href='almaty_masters_abai.html'">
+    <span class="left-content">
+        <span>👤 Выберите мастера</span>
+    </span>
+    <span class="arrow-down"></span>
+</button>
+
+<h3>Услуга</h3>
+<button class="menu-button" onclick="location.href='service.html'">
+    <span class="left-content">
+        <span>💈 Выберите услугу</span>
+    </span>
+    <span class="arrow-down"></span>
+</button>
+
+</body>
+</html>

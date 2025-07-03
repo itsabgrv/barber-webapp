@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Выбор специалиста</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background-color: #1e1e2f;
+      color: white;
+      font-family: sans-serif;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    .master-button {
+      padding: 12px 20px;
+      font-size: 16px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      margin: 10px 0;
+      cursor: pointer;
+    }
+
+    .master-button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Выберите специалиста</h2>
+<div id="mastersContainer"></div>
+
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const selectedDate = urlParams.get("date");
+  const selectedTime = urlParams.get("time");
+
+  const specialists = ["Специалист 1", "Специалист 2"];
+  const bookings = JSON.parse(localStorage.getItem("bookingData") || "{}");
+
+  const toMinutes = t => {
+    const [h, m] = t.split(":").map(Number);
+    return h * 60 + m;
+  };
+
+  const blockedTimes = [0, 15, 30].map(offset => {
+    const total = toMinutes(selectedTime) + offset;
+    const h = String(Math.floor(total / 60)).padStart(2, '0');
+    const m = String(total % 60).padStart(2, '0');
+    return `${h}:${m}`;
+  });
+
+  const mastersContainer = document.getElementById("mastersContainer");
+
+  specialists.forEach(name => {
+    const specialistBookings = bookings[name] || {};
+    const busy = specialistBookings[selectedDate] || [];
+
+    const isFree = blockedTimes.every(t => !busy.includes(t));
+    if (isFree) {
+      const btn = document.createElement("button");
+      btn.className = "master-button";
+      btn.innerText = name;
+      btn.onclick = () => {
+        // Добавляем запись
+        if (!bookings[name]) bookings[name] = {};
+        if (!bookings[name][selectedDate]) bookings[name][selectedDate] = [];
+        blockedTimes.forEach(t => bookings[name][selectedDate].push(t));
+        localStorage.setItem("bookingData", JSON.stringify(bookings));
+
+        window.location.href = "index.html";
+      };
+      mastersContainer.appendChild(btn);
+    }
+  });
+
+  if (mastersContainer.children.length === 0) {
+    mastersContainer.innerHTML = `<p>На это время нет доступных специалистов.</p>`;
+  }
+</script>
+
+</body>
+</html>
