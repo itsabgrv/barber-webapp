@@ -211,7 +211,7 @@
       <div class="branch-logo"></div>
       <div class="branch-text">
         <div class="branch-name">BROS & BLADES АL</div>
-        <div class="branch-address">ул. Абая дом 10</div>
+        <div class="branch-address">пр. Назарбаева, 55</div>
       </div>
     </div>
     <span class="arrow-down"></span>
@@ -294,7 +294,7 @@
         btn.onclick = () => {
           // Сохраняем данные бронирования
           const bookingData = {
-            branch: "BROS & BLADES AL - ул. Абая дом 10",
+            branch: "BROS & BLADES AL - пр. Назарбаева, 55",
             date: selectedDate,
             time: selectedTime,
             specialist: masterName,
@@ -306,7 +306,7 @@
           localStorage.setItem("currentBooking", JSON.stringify(bookingData));
 
           // Перенаправляем на страницу выбора услуги с параметрами в URL
-          window.location.href = `service_one.html?date=${encodeURIComponent(selectedDate)}&time=${encodeURIComponent(selectedTime)}&specialistId=${master.id}&specialist=${encodeURIComponent(masterName)}`;
+          window.location.href = `al_nazarbaeva_almaty_service_one.html?date=${encodeURIComponent(selectedDate)}&time=${encodeURIComponent(selectedTime)}&specialistId=${master.id}&specialist=${encodeURIComponent(masterName)}`;
 
         };
 

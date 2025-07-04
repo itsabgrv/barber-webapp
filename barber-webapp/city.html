@@ -5,16 +5,29 @@
   <title>Выберите город</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       font-family: Arial, sans-serif;
       max-width: 600px;
       margin: 0 auto;
       padding: 16px;
       background-color: #f5f5f5;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    body.page-loaded {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     h3 {
-      margin: 20px 0 20px 0;
+      margin: 20px 0;
       color: #333;
       text-align: left;
     }
@@ -28,7 +41,7 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
       text-align: left;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: background-color 0.3s;
     }
 
     .city-card:hover {
@@ -40,41 +53,57 @@
       font-size: 16px;
       color: #333;
     }
-    .city-filial{
-        color: #666666;
-        font-size: 12px;
-        margin-left: 10px;
-    }
-            .back-button {
-            display: inline-block;
-            padding: 8px 16px;
-            margin-bottom: 20px;
-            background-color: black;
-            border: none;
-            border-radius: 20px;
-            font-size: 14px;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            color: white;
-        }
 
-        .back-button:hover {
-            background-color: #333;
-        }
+    .city-filial {
+      color: #666666;
+      font-size: 12px;
+      margin-left: 10px;
+    }
+
+    .back-button {
+      display: inline-block;
+      padding: 8px 16px;
+      margin-bottom: 20px;
+      background-color: black;
+      border: none;
+      border-radius: 20px;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      color: white;
+    }
+
+    .back-button:hover {
+      background-color: #333;
+    }
   </style>
 </head>
 <body>
-<button class="back-button" onclick="history.back()">←</button>
+  <button class="back-button" onclick="fadeOut(() => history.back())">←</button>
 
-  <div class="city-card" onclick="location.href='almaty_filial.html'">
+  <div class="city-card" onclick="fadeOut(() => location.href='almaty_filial.html')">
     <span class="city-name">Алматы</span>
-      <span class="city-filial">2 филиала</span>
-
+    <span class="city-filial">2 филиала</span>
   </div>
 
-  <div class="city-card" onclick="location.href='astana.html'">
+  <div class="city-card" onclick="fadeOut(() => location.href='as_astana_filial.html')">
     <span class="city-name">Астана</span>
-      <span class="city-filial">1 филиал</span>
+    <span class="city-filial">1 филиал</span>
   </div>
+
+  <script>
+    // Плавное появление с задержкой в один кадр
+    window.addEventListener('DOMContentLoaded', () => {
+      requestAnimationFrame(() => {
+        document.body.classList.add('page-loaded');
+      });
+    });
+
+    // Плавное исчезновение перед переходом
+    function fadeOut(callback) {
+      document.body.classList.remove('page-loaded');
+      setTimeout(callback, 400);
+    }
+  </script>
 </body>
 </html>

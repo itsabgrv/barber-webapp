@@ -1,7 +1,9 @@
 from telegram import Update, WebAppInfo, MenuButtonWebApp
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
+from datetime import datetime
+import json
 
-# Старт
+# Стартовая команда
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     await update.message.reply_text(
@@ -9,25 +11,47 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         parse_mode="Markdown"
     )
 
-# Обработка финального выбора
+# Обработка WebApp данных
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.message.web_app_data:
-        data = update.message.web_app_data.data
         try:
-            import json
-            result = json.loads(data)
-            if "branch" in result:
-                await update.message.reply_text(
-                    f"✅ Запись принята!\n📍 Адрес: {result['branch']}"
-                )
-            else:
-                await update.message.reply_text("❌ Неполные данные.")
+            data = json.loads(update.message.web_app_data.data)
+            specialist = data.get("specialist", "неизвестно")
+            date_str = data.get("date", "неизвестно")
+            time_str = data.get("time", "неизвестно")
+
+            # Преобразование даты
+            try:
+                date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+                weekdays = {
+                    "Monday": "Понедельник",
+                    "Tuesday": "Вторник",
+                    "Wednesday": "Среда",
+                    "Thursday": "Четверг",
+                    "Friday": "Пятница",
+                    "Saturday": "Суббота",
+                    "Sunday": "Воскресенье",
+                }
+                formatted_date = weekdays[date_obj.strftime("%A")] + " " + date_obj.strftime("%d.%m.%Y")
+            except:
+                formatted_date = date_str
+
+            message = (
+                f"Мои поздравления 🙌🏽 Вы записались на *{formatted_date}* в *{time_str}* ✅\n"
+                f"Мастер: *{specialist}*\n\n"
+                f"*Правило заведения:*\n"
+                f" - мы ценим время наших клиентов и чтобы не было накладок большая просьба не опаздывать. "
+                f"После задержки более 20 минут мастер не сможет вас принять.\n"
+                f" - если вы все же поняли, что не успеваете — пожалуйста, отмените запись нажав кнопку «записаться»."
+            )
+
+            await update.message.reply_text(message, parse_mode="Markdown")
         except Exception as e:
-            await update.message.reply_text("Ошибка обработки данных.")
+            await update.message.reply_text("❌ Произошла ошибка при обработке записи.")
     else:
         await update.message.reply_text("Нажми кнопку 💈 *Записаться* слева внизу.", parse_mode="Markdown")
 
-# Кнопка WebApp в меню Telegram
+# Установка WebApp кнопки в меню
 async def setup_webapp_menu_button(app):
     await app.bot.set_chat_menu_button(
         menu_button=MenuButtonWebApp(

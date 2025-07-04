@@ -257,7 +257,7 @@
         <div class="branch-logo"></div>
         <div class="branch-text">
           <div class="branch-name">BROS & BLADES AL</div>
-          <div class="branch-address">ул. Абая дом 10</div>
+          <div class="branch-address">пр. Назарбаева, 55</div>
         </div>
       </div>
       <span class="arrow-down"></span>
@@ -394,7 +394,7 @@
     function continueToNextStep() {
       const urlParams = new URLSearchParams(window.location.search);
       const bookingData = {
-        branch: "BROS & BLADES AL - ул. Абая дом 10",
+        branch: "BROS & BLADES AL - пр. Назарбаева, 55",
         date: urlParams.get("date"),
         time: urlParams.get("time"),
         specialist: urlParams.get("specialist"),
@@ -403,7 +403,7 @@
         totalPrice: selectedServices.reduce((sum, service) => sum + service.price, 0)
       };
       localStorage.setItem('currentBooking', JSON.stringify(bookingData));
-      window.location.href = 'two_confirmation_two.html';
+      window.location.href = 'al_nazarbaeva_almaty_confirmation_two.html';
     }
 
     document.addEventListener('DOMContentLoaded', () => {

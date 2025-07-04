@@ -260,7 +260,7 @@
         <div class="branch-logo"></div>
         <div class="branch-text">
           <div class="branch-name">BROS & BLADES АL</div>
-          <div class="branch-address">ул. Абая дом 10</div>
+          <div class="branch-address">пр. Назарбаева, 55</div>
         </div>
       </div>
       <span class="arrow-down"></span>
@@ -466,7 +466,7 @@
       // Сохраняем выбранные услуги в localStorage
       const urlParams = new URLSearchParams(window.location.search);
       const bookingData = {
-        branch: "BROS & BLADES AL - ул. Абая дом 10",
+        branch: "BROS & BLADES AL - пр. Назарбаева, 55",
         date: urlParams.get("date"),
         time: urlParams.get("time"),
         specialist: urlParams.get("specialist"),
@@ -478,7 +478,7 @@
       localStorage.setItem('currentBooking', JSON.stringify(bookingData));
 
       // Переходим на страницу подтверждения
-      window.location.href = 'confirmation.html';
+      window.location.href = 'al_nazarbaeva_almaty_confirmation_one.html';
     }
 
     // Инициализация

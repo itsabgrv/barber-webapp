@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Подтверждение записи</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -320,7 +321,7 @@
         <div class="branch-logo"></div>
         <div class="branch-text">
           <div class="branch-name">BROS & BLADES АL</div>
-          <div class="branch-address">ул. Абая дом 10</div>
+          <div class="branch-address">пр. Назарбаева, 55</div>
         </div>
       </div>
       <span class="arrow-down"></span>
@@ -329,46 +330,37 @@
 
   <h2>Детали записи</h2>
 
-  <!-- Specialist card -->
+  <!-- Specialist Card -->
   <div class="specialist-card" id="specialistCard">
     <div class="specialist-avatar">
       <img id="specialistAvatar" src="" alt="Фото специалиста">
     </div>
     <div class="specialist-info">
-      <div class="specialist-name" id="specialistName">Александр Петров</div>
-      <div class="specialist-specialty" id="specialistSpecialty">Барбер</div>
+      <div class="specialist-name" id="specialistName">Имя специалиста</div>
+      <div class="specialist-specialty" id="specialistSpecialty">Специальность</div>
     </div>
   </div>
 
-  <!-- Appointment details -->
+  <!-- Appointment Details -->
   <div class="appointment-details">
     <div class="calendar-icon">📅</div>
     <div class="appointment-info">
-      <div class="appointment-date" id="appointmentDate">Пятница, 4 июля</div>
-      <div class="appointment-time" id="appointmentTime">14:00</div>
+      <div class="appointment-date" id="appointmentDate">Дата</div>
+      <div class="appointment-time" id="appointmentTime">Время</div>
     </div>
   </div>
 
   <!-- Services -->
   <div class="services-container">
     <h3>Услуги</h3>
-    <div id="servicesList">
-      <div class="service-item">
-        <span class="service-name">Мужская стрижка</span>
-        <span class="service-price">4 000 ₸</span>
-      </div>
-      <div class="service-item">
-        <span class="service-name">Оформление бороды</span>
-        <span class="service-price">3 000 ₸</span>
-      </div>
-    </div>
+    <div id="servicesList"></div>
     <div class="total-price">
       <span>Итого:</span>
-      <span id="servicesTotal">7 000 ₸</span>
+      <span id="servicesTotal">0 ₸</span>
     </div>
   </div>
 
-  <!-- User info form -->
+  <!-- User Info -->
   <div class="user-info-container">
     <h3>Ваши данные</h3>
     <div class="form-group">
@@ -391,36 +383,29 @@
 
   <div class="final-total">
     <span>Итого:</span>
-    <span id="finalTotal">7 000 ₸</span>
+    <span id="finalTotal">0 ₸</span>
   </div>
 
-  <button class="submit-button">Записаться</button>
+  <button class="submit-button" id="submitBtn">Записаться</button>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Load booking data from localStorage
+    document.addEventListener('DOMContentLoaded', function () {
       const bookingData = JSON.parse(localStorage.getItem('currentBooking') || '{}');
 
-      // Set specialist info
+      // Специалист
       if (bookingData.specialist) {
         document.getElementById('specialistName').textContent = bookingData.specialist;
 
-        // Set specialist avatar based on specialist name
-        let avatarUrl = '';
+        let avatarUrl = 'https://randomuser.me/api/portraits/lego/1.jpg';
         if (bookingData.specialist.includes('Александр Петров')) {
           avatarUrl = 'https://randomuser.me/api/portraits/men/32.jpg';
         } else if (bookingData.specialist.includes('Дмитрий Иванов')) {
           avatarUrl = 'https://randomuser.me/api/portraits/men/44.jpg';
         } else if (bookingData.specialist.includes('Екатерина Смирнова')) {
           avatarUrl = 'https://randomuser.me/api/portraits/women/65.jpg';
-        } else {
-          avatarUrl = 'https://randomuser.me/api/portraits/lego/1.jpg';
         }
         document.getElementById('specialistAvatar').src = avatarUrl;
-      }
 
-      // Set specialist specialty
-      if (bookingData.specialist) {
         let specialty = 'Специалист';
         if (bookingData.specialist.includes('Александр Петров')) {
           specialty = 'Барбер';
@@ -432,7 +417,7 @@
         document.getElementById('specialistSpecialty').textContent = specialty;
       }
 
-      // Set appointment date and time
+      // Дата и время
       if (bookingData.date && bookingData.time) {
         const date = new Date(bookingData.date);
         const options = { weekday: 'long', day: 'numeric', month: 'long' };
@@ -441,63 +426,55 @@
         document.getElementById('appointmentTime').textContent = bookingData.time;
       }
 
-      // Set services
+      // Услуги
       const servicesList = document.getElementById('servicesList');
-      const servicesTotal = document.getElementById('servicesTotal');
-      const finalTotal = document.getElementById('finalTotal');
-
+      let total = 0;
       if (bookingData.services && bookingData.services.length > 0) {
         servicesList.innerHTML = '';
-        let total = 0;
-
         bookingData.services.forEach(service => {
-          const serviceItem = document.createElement('div');
-          serviceItem.className = 'service-item';
-          serviceItem.innerHTML = `
+          const item = document.createElement('div');
+          item.className = 'service-item';
+          item.innerHTML = `
             <span class="service-name">${service.title}</span>
             <span class="service-price">${service.price.toLocaleString()} ₸</span>
           `;
-          servicesList.appendChild(serviceItem);
+          servicesList.appendChild(item);
           total += service.price;
         });
+      }
+      document.getElementById('servicesTotal').textContent = `${total.toLocaleString()} ₸`;
+      document.getElementById('finalTotal').textContent = `${total.toLocaleString()} ₸`;
+    });
 
-        servicesTotal.textContent = `${total.toLocaleString()} ₸`;
-        finalTotal.textContent = `${total.toLocaleString()} ₸`;
-        // Scroll to user info
-document.querySelector('.user-info-container').scrollIntoView({ behavior: 'smooth' });
+    // Отправка данных
+    document.getElementById('submitBtn').addEventListener('click', function () {
+      const userName = document.getElementById('userName').value.trim();
+      const userPhone = document.getElementById('userPhone').value.trim();
 
+      if (!userName || !userPhone) {
+        alert('Пожалуйста, заполните обязательные поля: Имя и Телефон');
+        return;
       }
 
-      // Handle form submission
-      document.querySelector('.submit-button').addEventListener('click', function() {
-        const userName = document.getElementById('userName').value;
-        const userPhone = document.getElementById('userPhone').value;
+      const userEmail = document.getElementById('userEmail').value.trim();
+      const userComment = document.getElementById('userComment').value.trim();
 
-        if (!userName || !userPhone) {
-          alert('Пожалуйста, заполните обязательные поля (Имя и Телефон)');
-          return;
-        }
+      const bookingData = JSON.parse(localStorage.getItem('currentBooking') || '{}');
 
-        // Prepare data to send
-        const bookingDetails = {
-          ...bookingData,
-          user: {
-            name: userName,
-            phone: userPhone,
-            email: document.getElementById('userEmail').value,
-            comment: document.getElementById('userComment').value
-          }
-        };
+      // Telegram WebApp send
+      Telegram.WebApp.sendData(JSON.stringify({
+        date: bookingData.date,
+        time: bookingData.time,
+        specialist: bookingData.specialist,
+        services: bookingData.services,
+        name: userName,
+        phone: userPhone,
+        email: userEmail,
+        comment: userComment,
+        branch: "BROS & BLADES АL"
+      }));
 
-        // Here you would typically send this data to your server
-        console.log('Booking details:', bookingDetails);
-
-        // For demo purposes, just show a success message
-        alert('Ваша запись успешно оформлена!');
-
-        // Redirect or close the web app
-        // window.location.href = 'success.html';
-      });
+      Telegram.WebApp.close();
     });
   </script>
 </body>

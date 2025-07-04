@@ -289,26 +289,6 @@
     .submit-button:hover {
       background-color: #333;
     }
-    @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.specialist-card,
-.appointment-details,
-.services-container,
-.user-info-container,
-.final-total,
-.submit-button {
-  animation: fadeInUp 0.4s ease both;
-}
-
   </style>
 </head>
 <body>
@@ -320,7 +300,7 @@
         <div class="branch-logo"></div>
         <div class="branch-text">
           <div class="branch-name">BROS & BLADES АL</div>
-          <div class="branch-address">ул. Абая дом 10</div>
+          <div class="branch-address">пр. Назарбаева, 55</div>
         </div>
       </div>
       <span class="arrow-down"></span>
@@ -463,42 +443,29 @@
 
         servicesTotal.textContent = `${total.toLocaleString()} ₸`;
         finalTotal.textContent = `${total.toLocaleString()} ₸`;
-        // Scroll to user info
-document.querySelector('.user-info-container').scrollIntoView({ behavior: 'smooth' });
-
       }
 
       // Handle form submission
       document.querySelector('.submit-button').addEventListener('click', function() {
-        const userName = document.getElementById('userName').value;
-        const userPhone = document.getElementById('userPhone').value;
+  const userName = document.getElementById('userName').value;
+  const userPhone = document.getElementById('userPhone').value;
 
-        if (!userName || !userPhone) {
-          alert('Пожалуйста, заполните обязательные поля (Имя и Телефон)');
-          return;
-        }
+  if (!userName || !userPhone) {
+    alert('Пожалуйста, заполните обязательные поля (Имя и Телефон)');
+    return;
+  }
 
-        // Prepare data to send
-        const bookingDetails = {
-          ...bookingData,
-          user: {
-            name: userName,
-            phone: userPhone,
-            email: document.getElementById('userEmail').value,
-            comment: document.getElementById('userComment').value
-          }
-        };
+  // Отправляем данные в Telegram WebApp
+  Telegram.WebApp.sendData(JSON.stringify({
+    date: bookingData.date,
+    time: bookingData.time,
+    specialist: bookingData.specialist,
+    branch: "BROS & BLADES АL"
+  }));
 
-        // Here you would typically send this data to your server
-        console.log('Booking details:', bookingDetails);
+  Telegram.WebApp.close();
+});
 
-        // For demo purposes, just show a success message
-        alert('Ваша запись успешно оформлена!');
-
-        // Redirect or close the web app
-        // window.location.href = 'success.html';
-      });
-    });
   </script>
 </body>
 </html>

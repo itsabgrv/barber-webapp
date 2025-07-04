@@ -11,72 +11,74 @@
       margin: 0 auto;
       padding: 16px;
       background-color: #f5f5f5;
+      overflow-x: hidden;
+      overflow-y: hidden;
+    }
+
+    .page {
+      transition: transform 0.4s ease, opacity 0.4s ease;
+    }
+
+    .slide-up {
+      transform: translateY(-100%);
+      opacity: 0;
     }
 
     h3 {
-      margin: 20px 0 20px 0;
+      margin: 20px 0;
       color: #333;
-      text-align: left;
     }
 
-    .city-card {
+    .menu-button {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 65px;
+      width: 100%;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      font-size: 16px;
       background: #ffffff;
       border: 1px solid #e0e0e0;
       border-radius: 10px;
-      padding: 16px;
-      margin-bottom: 12px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-      text-align: left;
       cursor: pointer;
-      transition: all 0.3s;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      color: black;
     }
 
-    .city-card:hover {
+    .menu-button:hover {
       background-color: #f9f9f9;
     }
 
-    .city-name {
-      font-weight: bold;
-      font-size: 16px;
-      color: #333;
+    .arrow-down {
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 6px solid #666;
     }
-           .menu-button {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 65px;
-            width: 100%;
-            padding: 14px 16px;
-            margin-bottom: 10px;
-            font-size: 16px;
-            background: #ffffff;
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-            color: black;
-        }
-
-        .menu-button:hover {
-            background-color: #f9f9f9;
-        }
-
-        .arrow-down {
-            width: 0;
-            height: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-top: 6px solid #666;
-        }
   </style>
 </head>
 <body>
-<h3>Где?</h3>
-<button class="menu-button" onclick="location.href='city.html'">
-    <span class="left-content">
+  <div class="page" id="mainPage">
+    <h3>Где?</h3>
+    <button class="menu-button" id="chooseCityBtn">
+      <span class="left-content">
         <span>Выбрать город</span>
-    </span>
-    <span class="arrow-down"></span>
-</button>
+      </span>
+      <span class="arrow-down"></span>
+    </button>
+  </div>
+
+  <script>
+    document.getElementById('chooseCityBtn').addEventListener('click', function () {
+      const page = document.getElementById('mainPage');
+      page.classList.add('slide-up');
+
+      setTimeout(() => {
+        window.location.href = 'city.html';
+      }, 400); // время должно совпадать с CSS transition
+    });
+  </script>
 </body>
 </html>
