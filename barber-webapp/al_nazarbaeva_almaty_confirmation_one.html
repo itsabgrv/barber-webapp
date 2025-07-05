@@ -451,47 +451,53 @@
   });
 
   // Отправка данных
-  document.getElementById('submitBtn').addEventListener('click', async function() {
+  Telegram.WebApp.ready();
+  Telegram.WebApp.expand();
+
+  document.getElementById('submitBtn').addEventListener('click', function() {
     const userName = document.getElementById('userName').value.trim();
     const userPhone = document.getElementById('userPhone').value.trim();
 
     if (!userName || !userPhone) {
-      alert('Пожалуйста, заполните обязательные поля: Имя и Телефон');
+      alert('Заполните имя и телефон');
       return;
     }
 
     try {
-      // Форматируем дату
+      // Форматирование даты
       const date = new Date(bookingData.date);
       const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
       const formattedDate = date.toLocaleDateString('ru-RU', options);
 
       // Подготовка данных
       const data = {
+        action: 'create_booking', // Добавляем действие для бота
         date: formattedDate,
         time: bookingData.time,
         specialist: bookingData.specialist,
         services: bookingData.services,
-        name: userName,
-        phone: userPhone,
-        email: document.getElementById('userEmail').value.trim(),
-        comment: document.getElementById('userComment').value.trim(),
+        client: {
+          name: userName,
+          phone: userPhone,
+          email: document.getElementById('userEmail').value.trim(),
+          comment: document.getElementById('userComment').value.trim()
+        },
         branch: "BROS & BLADES AL"
       };
 
-      console.log("Отправляемые данные:", data); // Для отладки
+      console.log("Отправка данных в бота:", data);
 
       // Отправка данных
       Telegram.WebApp.sendData(JSON.stringify(data));
 
-      // Закрытие WebApp
+      // Закрытие с задержкой
       setTimeout(() => {
         Telegram.WebApp.close();
-      }, 300);
+      }, 500);
 
     } catch (error) {
-      console.error("Ошибка при отправке данных:", error);
-      alert("Произошла ошибка при отправке данных");
+      console.error("Ошибка:", error);
+      alert("Ошибка отправки данных");
     }
   });
 </script>
