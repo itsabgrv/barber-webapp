@@ -464,23 +464,22 @@
     const userComment = document.getElementById('userComment').value.trim();
 
     Telegram.WebApp.sendData(JSON.stringify({
-  date: bookingData.date,
-  time: bookingData.time,
-  specialist: bookingData.specialist,
-  services: bookingData.services,
-  name: userName,
-  phone: userPhone,
-  email: userEmail,
-  comment: userComment,
-  branch: "BROS & BLADES АL"
-}));
+      date: bookingData.date,
+      time: bookingData.time,
+      specialist: bookingData.specialist,
+      services: bookingData.services,
+      name: userName,
+      phone: userPhone,
+      email: userEmail,
+      comment: userComment,
+      branch: "BROS & BLADES АL"
+    }));
 
-setTimeout(() => {
-  Telegram.WebApp.close();
-}, 500);
+    setTimeout(() => {
+      Telegram.WebApp.close();
+    }, 500);
 
-
-
+  });
 </script>
 
 </body>
