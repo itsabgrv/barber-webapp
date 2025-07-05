@@ -4,11 +4,16 @@ import json
 
 TOKEN = "8112562910:AAHXA_yu1OEB-JG3Lzdxje0g8-LWyprOslI"
 
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Добро пожаловать! Нажмите кнопку 'Записаться' внизу экрана.")
 
+
 async def handle_webapp_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    print("📥 Получено сообщение:", update.message)
+    print("📥 Обработка данных от WebApp:")
+    print("➡️ update.message:", update.message)
+    print("➡️ update.message.web_app_data:", update.message.web_app_data)
+
     try:
         if update.message.web_app_data:
             print("✅ Получены данные из WebApp")
@@ -32,13 +37,11 @@ async def handle_webapp_data(update: Update, context: ContextTypes.DEFAULT_TYPE)
                 f"💬 Комментарий: {data.get('comment', '—')}"
             )
 
-            # Отправка пользователю
             await context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
-
         else:
-            print("❌ Данные из WebApp не найдены")
+            print("❌ web_app_data отсутствует")
     except Exception as e:
-        print("❌ Ошибка обработки данных из WebApp:", e)
+        print("❌ Ошибка обработки данных:", e)
         await context.bot.send_message(chat_id=update.effective_chat.id, text="Произошла ошибка при обработке данных 😞")
 
 
@@ -50,12 +53,18 @@ async def setup_menu(app):
         )
     )
 
+
 def main():
     app = ApplicationBuilder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
-    app.add_handler(MessageHandler(filters.TEXT & filters.ALL, handle_webapp_data))
+
+    # 🛠️ Правильный фильтр для обработки WebApp данных
+    app.add_handler(MessageHandler(filters.StatusUpdate.WEB_APP_DATA, handle_webapp_data))
+
     app.post_init = setup_menu
+    print("✅ Бот запущен...")
     app.run_polling()
+
 
 if __name__ == "__main__":
     main()
