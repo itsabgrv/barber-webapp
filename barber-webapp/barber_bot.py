@@ -2,20 +2,15 @@ from telegram import Update, WebAppInfo, MenuButtonWebApp
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
 import json
 
-# Стартовая команда
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Добро пожаловать! Нажмите кнопку «Записаться» внизу экрана.")
 
-# Обработка данных из WebApp
 async def handle_webapp_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
-        print("📨 handle_webapp_data вызван")
-        print("Raw update.message:", update.message)
-
         if update.message.web_app_data:
-            print("✅ web_app_data:", update.message.web_app_data.data)
+            print("✅ Данные получены от WebApp")
             data = json.loads(update.message.web_app_data.data)
-            print("📦 Parsed JSON:", data)
+            print("📦 JSON:", data)
 
             message = (
                 f"Мои поздравления 🙌🏽 Вы записались на {data['date']} в {data['time']} ✅\n"
@@ -25,20 +20,16 @@ async def handle_webapp_data(update: Update, context: ContextTypes.DEFAULT_TYPE)
                 " - После задержки более 20 минут мастер не сможет вас принять.\n"
                 " - если вы все же поняли, что не успеваете пожалуйста отмените запись нажав кнопку «записаться»"
             )
-
             await context.bot.send_message(chat_id=update.effective_chat.id, text=message)
         else:
-            print("❌ Нет web_app_data в сообщении")
-
+            print("❌ Нет web_app_data")
     except Exception as e:
-        print("❌ Ошибка:", e)
+        print("❌ Ошибка при обработке web_app_data:", e)
 
-# Эхо-хендлер для проверки получения сообщений
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    print("📥 Пришло сообщение:", update.message.text)
+    print("📥 Сообщение:", update.message.text)
     await update.message.reply_text("Я получил сообщение!")
 
-# Кнопка WebApp
 async def setup_webapp_menu_button(app):
     await app.bot.set_chat_menu_button(
         menu_button=MenuButtonWebApp(
@@ -47,14 +38,13 @@ async def setup_webapp_menu_button(app):
         )
     )
 
-# Главный запуск
 def main():
     TOKEN = "8112562910:AAHXA_yu1OEB-JG3Lzdxje0g8-LWyprOslI"
     app = ApplicationBuilder().token(TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
-    app.add_handler(MessageHandler(filters.StatusUpdate.WEB_APP_DATA, handle_webapp_data))
-    app.add_handler(MessageHandler(filters.TEXT, echo))  # <-- переместил сюда
+    app.add_handler(MessageHandler(filters.TEXT & filters.ALL, handle_webapp_data))  # 👈 заменили фильтр
+    app.add_handler(MessageHandler(filters.TEXT, echo))  # на всякий случай
 
     app.post_init = setup_webapp_menu_button
 
