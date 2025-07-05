@@ -425,7 +425,9 @@
     if (bookingData.date && bookingData.time) {
       const date = new Date(bookingData.date);
       const options = { weekday: 'long', day: 'numeric', month: 'long' };
-      const formattedDate = date.toLocaleDateString('ru-RU', options);
+      const day = date.toLocaleDateString('ru-RU', { weekday: 'long' });
+      const shortDate = date.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      const formattedDate = `${day.charAt(0).toUpperCase() + day.slice(1)} ${shortDate}`;
       document.getElementById('appointmentDate').textContent = formattedDate;
       document.getElementById('appointmentTime').textContent = bookingData.time;
     }
@@ -451,53 +453,47 @@
   });
 
   // Отправка данных
-  Telegram.WebApp.ready();
-  Telegram.WebApp.expand();
-
-  document.getElementById('submitBtn').addEventListener('click', function() {
+  document.getElementById('submitBtn').addEventListener('click', async function() {
     const userName = document.getElementById('userName').value.trim();
     const userPhone = document.getElementById('userPhone').value.trim();
 
     if (!userName || !userPhone) {
-      alert('Заполните имя и телефон');
+      alert('Пожалуйста, заполните обязательные поля: Имя и Телефон');
       return;
     }
 
     try {
-      // Форматирование даты
+      // Форматируем дату
       const date = new Date(bookingData.date);
       const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
       const formattedDate = date.toLocaleDateString('ru-RU', options);
 
       // Подготовка данных
       const data = {
-        action: 'create_booking', // Добавляем действие для бота
         date: formattedDate,
         time: bookingData.time,
         specialist: bookingData.specialist,
         services: bookingData.services,
-        client: {
-          name: userName,
-          phone: userPhone,
-          email: document.getElementById('userEmail').value.trim(),
-          comment: document.getElementById('userComment').value.trim()
-        },
+        name: userName,
+        phone: userPhone,
+        email: document.getElementById('userEmail').value.trim(),
+        comment: document.getElementById('userComment').value.trim(),
         branch: "BROS & BLADES AL"
       };
 
-      console.log("Отправка данных в бота:", data);
+      console.log("Отправляемые данные:", data); // Для отладки
 
       // Отправка данных
       Telegram.WebApp.sendData(JSON.stringify(data));
 
-      // Закрытие с задержкой
+      // Закрытие WebApp
       setTimeout(() => {
         Telegram.WebApp.close();
-      }, 500);
+      }, 1500);
 
     } catch (error) {
-      console.error("Ошибка:", error);
-      alert("Ошибка отправки данных");
+      console.error("Ошибка при отправке данных:", error);
+      alert("Произошла ошибка при отправке данных");
     }
   });
 </script>
