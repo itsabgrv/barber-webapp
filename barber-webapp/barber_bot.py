@@ -2,35 +2,30 @@ from telegram import Update, WebAppInfo, MenuButtonWebApp
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
 import json
 
+TOKEN = "ТОКЕН_БОТА"
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Добро пожаловать! Нажмите кнопку «Записаться» внизу экрана.")
+    await update.message.reply_text("Добро пожаловать! Нажмите кнопку 'Записаться' внизу экрана.")
 
 async def handle_webapp_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print("📥 Получено сообщение:", update.message)
     try:
         if update.message.web_app_data:
-            print("✅ Данные получены от WebApp")
+            print("✅ Получены данные из WebApp")
             data = json.loads(update.message.web_app_data.data)
-            print("📦 JSON:", data)
+            print("📦 Данные:", data)
 
-            message = (
-                f"Мои поздравления 🙌🏽 Вы записались на {data['date']} в {data['time']} ✅\n"
-                f"Мастер: {data['specialist']}\n\n"
-                f"Правило заведения:\n"
-                " - мы ценим время наших клиентов и чтобы не было накладок большая просьба не опаздывать.\n"
-                " - После задержки более 20 минут мастер не сможет вас принять.\n"
-                " - если вы все же поняли, что не успеваете пожалуйста отмените запись нажав кнопку «записаться»"
+            msg = (
+                f"Вы записались на {data['date']} в {data['time']}\n"
+                f"Мастер: {data['specialist']}"
             )
-            await context.bot.send_message(chat_id=update.effective_chat.id, text=message)
+            await context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
         else:
-            print("❌ Нет web_app_data")
+            print("❌ web_app_data отсутствует")
     except Exception as e:
-        print("❌ Ошибка при обработке web_app_data:", e)
+        print("❌ Ошибка:", e)
 
-async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    print("📥 Сообщение:", update.message.text)
-    await update.message.reply_text("Я получил сообщение!")
-
-async def setup_webapp_menu_button(app):
+async def setup_menu(app):
     await app.bot.set_chat_menu_button(
         menu_button=MenuButtonWebApp(
             text="💈 Записаться",
@@ -39,16 +34,10 @@ async def setup_webapp_menu_button(app):
     )
 
 def main():
-    TOKEN = "8112562910:AAHXA_yu1OEB-JG3Lzdxje0g8-LWyprOslI"
     app = ApplicationBuilder().token(TOKEN).build()
-
     app.add_handler(CommandHandler("start", start))
-    app.add_handler(MessageHandler(filters.TEXT & filters.ALL, handle_webapp_data))  # 👈 заменили фильтр
-    app.add_handler(MessageHandler(filters.TEXT, echo))  # на всякий случай
-
-    app.post_init = setup_webapp_menu_button
-
-    print("✅ Бот запущен...")
+    app.add_handler(MessageHandler(filters.TEXT & filters.ALL, handle_webapp_data))
+    app.post_init = setup_menu
     app.run_polling()
 
 if __name__ == "__main__":
