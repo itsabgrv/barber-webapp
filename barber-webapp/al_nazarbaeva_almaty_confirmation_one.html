@@ -470,10 +470,19 @@
 
       // Подготовка данных
       const data = {
-  date: "Пятница 18.07.2025",
-  time: "12:00",
-  specialist: "Ильнар"
+  date: bookingData.date,
+  time: bookingData.time,
+  specialist: bookingData.specialist,
+  services: bookingData.services,
+  name: userName,
+  phone: userPhone,
+  email: document.getElementById('userEmail').value.trim(),
+  comment: document.getElementById('userComment').value.trim(),
+  branch: bookingData.branch
 };
+Telegram.WebApp.sendData(JSON.stringify(data));
+
+
 
       alert("Отправка началась");
       console.log("Отправляемые данные:", data); // Для отладки
