@@ -451,7 +451,7 @@
   });
 
   // Отправка данных
-  document.getElementById('submitBtn').addEventListener('click', function () {
+  document.getElementById('submitBtn').addEventListener('click', async function() {
     const userName = document.getElementById('userName').value.trim();
     const userPhone = document.getElementById('userPhone').value.trim();
 
@@ -460,36 +460,39 @@
       return;
     }
 
-    const userEmail = document.getElementById('userEmail').value.trim();
-    const userComment = document.getElementById('userComment').value.trim();
+    try {
+      // Форматируем дату
+      const date = new Date(bookingData.date);
+      const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+      const formattedDate = date.toLocaleDateString('ru-RU', options);
 
-    // Форматируем дату для сообщения
-    const date = new Date(bookingData.date);
-    const formattedDate = date.toLocaleDateString('ru-RU', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    });
+      // Подготовка данных
+      const data = {
+        date: formattedDate,
+        time: bookingData.time,
+        specialist: bookingData.specialist,
+        services: bookingData.services,
+        name: userName,
+        phone: userPhone,
+        email: document.getElementById('userEmail').value.trim(),
+        comment: document.getElementById('userComment').value.trim(),
+        branch: "BROS & BLADES AL"
+      };
 
-    // Подготавливаем данные для отправки
-    const dataToSend = {
-      date: formattedDate,
-      time: bookingData.time,
-      specialist: bookingData.specialist,
-      services: bookingData.services,
-      name: userName,
-      phone: userPhone,
-      email: userEmail,
-      comment: userComment,
-      branch: "BROS & BLADES АL"
-    };
+      console.log("Отправляемые данные:", data); // Для отладки
 
-    // Отправляем данные в бот
-    Telegram.WebApp.sendData(JSON.stringify(dataToSend));
+      // Отправка данных
+      Telegram.WebApp.sendData(JSON.stringify(data));
 
-    // Закрываем WebApp
-    Telegram.WebApp.close();
+      // Закрытие WebApp
+      setTimeout(() => {
+        Telegram.WebApp.close();
+      }, 300);
+
+    } catch (error) {
+      console.error("Ошибка при отправке данных:", error);
+      alert("Произошла ошибка при отправке данных");
+    }
   });
 </script>
 
