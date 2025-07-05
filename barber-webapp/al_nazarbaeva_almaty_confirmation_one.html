@@ -463,8 +463,18 @@
     const userEmail = document.getElementById('userEmail').value.trim();
     const userComment = document.getElementById('userComment').value.trim();
 
-    Telegram.WebApp.sendData(JSON.stringify({
-      date: bookingData.date,
+    // Форматируем дату для сообщения
+    const date = new Date(bookingData.date);
+    const formattedDate = date.toLocaleDateString('ru-RU', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+
+    // Подготавливаем данные для отправки
+    const dataToSend = {
+      date: formattedDate,
       time: bookingData.time,
       specialist: bookingData.specialist,
       services: bookingData.services,
@@ -473,12 +483,13 @@
       email: userEmail,
       comment: userComment,
       branch: "BROS & BLADES АL"
-    }));
+    };
 
-    setTimeout(() => {
-      Telegram.WebApp.close();
-    }, 1500);
+    // Отправляем данные в бот
+    Telegram.WebApp.sendData(JSON.stringify(dataToSend));
 
+    // Закрываем WebApp
+    Telegram.WebApp.close();
   });
 </script>
 
