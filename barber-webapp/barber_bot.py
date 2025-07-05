@@ -9,24 +9,30 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # Обработка данных из WebApp
 async def handle_webapp_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
-        data = json.loads(update.message.web_app_data.data)
-        print("Получены данные:", data)  # Для отладки
+        print("📨 handle_webapp_data вызван")
+        print("Raw update.message:", update.message)
 
-        # Формируем сообщение
-        message = (
-            f"Мои поздравления 🙌🏽 Вы записались на {data['date']} в {data['time']} ✅\n"
-            f"Мастер: {data['specialist']}\n\n"
-            f"Правило заведения:\n"
-            " - мы ценим время наших клиентов и чтобы не было накладок большая просьба не опаздывать.\n"
-            " - После задержки более 20 минут мастер не сможет вас принять.\n"
-            " - если вы все же поняли, что не успеваете пожалуйста отмените запись нажав кнопку «записаться»"
-        )
+        if update.message.web_app_data:
+            print("✅ web_app_data:", update.message.web_app_data.data)
+            data = json.loads(update.message.web_app_data.data)
+            print("📦 Parsed JSON:", data)
 
-        await update.message.reply_text(message)
+            message = (
+                f"Мои поздравления 🙌🏽 Вы записались на {data['date']} в {data['time']} ✅\n"
+                f"Мастер: {data['specialist']}\n\n"
+                f"Правило заведения:\n"
+                " - мы ценим время наших клиентов и чтобы не было накладок большая просьба не опаздывать.\n"
+                " - После задержки более 20 минут мастер не сможет вас принять.\n"
+                " - если вы все же поняли, что не успеваете пожалуйста отмените запись нажав кнопку «записаться»"
+            )
+
+            await context.bot.send_message(chat_id=update.effective_chat.id, text=message)
+        else:
+            print("❌ Нет web_app_data в сообщении")
 
     except Exception as e:
-        print("Ошибка обработки данных WebApp:", e)
-        await update.message.reply_text("Произошла ошибка при обработке вашей записи.")
+        print("❌ Ошибка:", e)
+
 
 
 
@@ -46,10 +52,12 @@ def main():
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.StatusUpdate.WEB_APP_DATA, handle_webapp_data))
+
     app.post_init = setup_webapp_menu_button
 
     print("✅ Бот запущен...")
     app.run_polling()
+
 
 if __name__ == "__main__":
     main()
