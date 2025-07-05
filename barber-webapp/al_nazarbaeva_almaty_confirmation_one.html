@@ -470,20 +470,16 @@
 
       // Подготовка данных
       const data = {
-        date: formattedDate,
-        time: bookingData.time,
-        specialist: bookingData.specialist,
-        services: bookingData.services,
-        name: userName,
-        phone: userPhone,
-        email: document.getElementById('userEmail').value.trim(),
-        comment: document.getElementById('userComment').value.trim(),
-        branch: "BROS & BLADES AL"
-      };
+  date: "Пятница 18.07.2025",
+  time: "12:00",
+  specialist: "Ильнар"
+};
 
+      alert("Отправка началась");
       console.log("Отправляемые данные:", data); // Для отладки
 
       // Отправка данных
+
       Telegram.WebApp.sendData(JSON.stringify(data));
 
       // Закрытие WebApp

@@ -33,10 +33,12 @@ async def handle_webapp_data(update: Update, context: ContextTypes.DEFAULT_TYPE)
     except Exception as e:
         print("❌ Ошибка:", e)
 
+# Эхо-хендлер для проверки получения сообщений
+async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print("📥 Пришло сообщение:", update.message.text)
+    await update.message.reply_text("Я получил сообщение!")
 
-
-
-# Установка кнопки WebApp в Telegram меню
+# Кнопка WebApp
 async def setup_webapp_menu_button(app):
     await app.bot.set_chat_menu_button(
         menu_button=MenuButtonWebApp(
@@ -45,19 +47,19 @@ async def setup_webapp_menu_button(app):
         )
     )
 
-# Запуск бота
+# Главный запуск
 def main():
     TOKEN = "8112562910:AAHXA_yu1OEB-JG3Lzdxje0g8-LWyprOslI"
     app = ApplicationBuilder().token(TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.StatusUpdate.WEB_APP_DATA, handle_webapp_data))
+    app.add_handler(MessageHandler(filters.TEXT, echo))  # <-- переместил сюда
 
     app.post_init = setup_webapp_menu_button
 
     print("✅ Бот запущен...")
     app.run_polling()
-
 
 if __name__ == "__main__":
     main()
