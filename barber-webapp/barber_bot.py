@@ -54,7 +54,7 @@ async def setup_menu(app):
 def main():
     app = ApplicationBuilder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
-    app.add_handler(MessageHandler(filters.TEXT & filters.UpdateType.MESSAGE, handle_webapp_data))
+    app.add_handler(MessageHandler(filters.StatusUpdate.WEB_APP_DATA, handle_webapp_data))
     app.post_init = setup_menu
     print("✅ Бот запущен, слушаем WebApp события...")
     app.run_polling()
