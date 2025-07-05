@@ -9,6 +9,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # Обработка данных из WebApp
 async def handle_webapp_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print("🔔 handle_webapp_data вызван!")
+    print(update.message.web_app_data.data)
 
     if update.message.web_app_data:
         print("✅ Найдены web_app_data:", update.message.web_app_data.data)
