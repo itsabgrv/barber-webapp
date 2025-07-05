@@ -2,7 +2,7 @@ from telegram import Update, WebAppInfo, MenuButtonWebApp
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
 import json
 
-TOKEN = "ТОКЕН_БОТА"
+TOKEN = "8112562910:AAHXA_yu1OEB-JG3Lzdxje0g8-LWyprOslI"
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Добро пожаловать! Нажмите кнопку 'Записаться' внизу экрана.")
