@@ -8,37 +8,39 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Добро пожаловать! Нажмите кнопку 'Записаться' внизу экрана.")
 
 async def handle_webapp_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    print("📥 Получено сообщение:", update.message)
-    if not update.message.web_app_data:
-        print("❌ Это не WebApp данные.")
+    if not update.message:
+        print("⚠️ Нет update.message")
         return
 
-    try:
-        print("✅ Данные WebApp:", update.message.web_app_data.data)
-        data = json.loads(update.message.web_app_data.data)
-        print("📦 JSON распарсен:", data)
+    if not update.message.web_app_data:
+        print("⚠️ Нет web_app_data")
+        return
 
+    print("✅ Получены web_app данные")
+    try:
+        data = json.loads(update.message.web_app_data.data)
+        print("📦", data)
+
+        # Формируем ответное сообщение
         services = data.get("services", [])
-        services_text = "\n".join(f"— {s['title']} ({s['price']} ₸)" for s in services) or "—"
+        services_text = "\n".join(f"— {s['title']} ({s['price']} ₸)" for s in services) if services else "—"
 
         msg = (
-            "🙌 Вы записались!\n\n"
-            f"📅 Дата: {data.get('date','—')} в {data.get('time','—')}\n"
-            f"👤 Мастер: {data.get('specialist','—')}\n"
-            f"📍 Филиал: {data.get('branch','—')}\n\n"
+            f"🙌 Вы записались!\n\n"
+            f"📅 Дата: {data.get('date')} в {data.get('time')}\n"
+            f"👤 Мастер: {data.get('specialist')}\n"
+            f"📍 Филиал: {data.get('branch')}\n\n"
             f"💼 Услуги:\n{services_text}\n\n"
-            f"🧑 Имя: {data.get('name','—')}\n"
-            f"📞 Телефон: {data.get('phone','—')}\n"
-            f"✉️ Email: {data.get('email','—')}\n"
-            f"💬 Комментарий: {data.get('comment','—')}"
+            f"🧑 Имя: {data.get('name')}\n"
+            f"📞 Телефон: {data.get('phone')}\n"
+            f"✉️ Email: {data.get('email')}\n"
+            f"💬 Комментарий: {data.get('comment')}"
         )
 
         await context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
-        print("✅ Сообщение успешно отправлено!")
-
+        print("✅ Сообщение отправлено")
     except Exception as e:
         print("❌ Ошибка при обработке:", e)
-        await context.bot.send_message(chat_id=update.effective_chat.id, text="❌ Произошла ошибка при обработке записи")
 
 async def setup_menu(app):
     await app.bot.set_chat_menu_button(
@@ -52,7 +54,7 @@ async def setup_menu(app):
 def main():
     app = ApplicationBuilder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
-    app.add_handler(MessageHandler(filters.StatusUpdate.WEB_APP_DATA, handle_webapp_data))
+    app.add_handler(MessageHandler(filters.TEXT & filters.UpdateType.MESSAGE, handle_webapp_data))
     app.post_init = setup_menu
     print("✅ Бот запущен, слушаем WebApp события...")
     app.run_polling()
