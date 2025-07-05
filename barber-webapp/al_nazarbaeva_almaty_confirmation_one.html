@@ -368,7 +368,7 @@
       <input type="text" id="userName" placeholder="Введите имя" required>
     </div>
     <div class="form-group">
-      <label for="userPhone">Телефон <span>*</span></label>
+      <label for="userPhone">Телефоннн <span>*</span></label>
       <input type="tel" id="userPhone" placeholder="Номер телефона с кодом страны" required>
     </div>
     <div class="form-group">
@@ -388,94 +388,96 @@
 
   <button class="submit-button" id="submitBtn">Записаться</button>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const bookingData = JSON.parse(localStorage.getItem('currentBooking') || '{}');
+<script>
+  let bookingData = {}; // доступна глобально
 
-      // Специалист
-      if (bookingData.specialist) {
-        document.getElementById('specialistName').textContent = bookingData.specialist;
+  document.addEventListener('DOMContentLoaded', function () {
+    Telegram.WebApp.ready();
 
-        let avatarUrl = 'https://randomuser.me/api/portraits/lego/1.jpg';
-        if (bookingData.specialist.includes('Александр Петров')) {
-          avatarUrl = 'https://randomuser.me/api/portraits/men/32.jpg';
-        } else if (bookingData.specialist.includes('Дмитрий Иванов')) {
-          avatarUrl = 'https://randomuser.me/api/portraits/men/44.jpg';
-        } else if (bookingData.specialist.includes('Екатерина Смирнова')) {
-          avatarUrl = 'https://randomuser.me/api/portraits/women/65.jpg';
-        }
-        document.getElementById('specialistAvatar').src = avatarUrl;
+    bookingData = JSON.parse(localStorage.getItem('currentBooking') || '{}');
 
-        let specialty = 'Специалист';
-        if (bookingData.specialist.includes('Александр Петров')) {
-          specialty = 'Барбер';
-        } else if (bookingData.specialist.includes('Дмитрий Иванов')) {
-          specialty = 'Стилист';
-        } else if (bookingData.specialist.includes('Екатерина Смирнова')) {
-          specialty = 'Мастер ногтевого сервиса';
-        }
-        document.getElementById('specialistSpecialty').textContent = specialty;
+    // Специалист
+    if (bookingData.specialist) {
+      document.getElementById('specialistName').textContent = bookingData.specialist;
+
+      let avatarUrl = 'https://randomuser.me/api/portraits/lego/1.jpg';
+      if (bookingData.specialist.includes('Александр Петров')) {
+        avatarUrl = 'https://randomuser.me/api/portraits/men/32.jpg';
+      } else if (bookingData.specialist.includes('Дмитрий Иванов')) {
+        avatarUrl = 'https://randomuser.me/api/portraits/men/44.jpg';
+      } else if (bookingData.specialist.includes('Екатерина Смирнова')) {
+        avatarUrl = 'https://randomuser.me/api/portraits/women/65.jpg';
       }
+      document.getElementById('specialistAvatar').src = avatarUrl;
 
-      // Дата и время
-      if (bookingData.date && bookingData.time) {
-        const date = new Date(bookingData.date);
-        const options = { weekday: 'long', day: 'numeric', month: 'long' };
-        const formattedDate = date.toLocaleDateString('ru-RU', options);
-        document.getElementById('appointmentDate').textContent = formattedDate;
-        document.getElementById('appointmentTime').textContent = bookingData.time;
+      let specialty = 'Специалист';
+      if (bookingData.specialist.includes('Александр Петров')) {
+        specialty = 'Барбер';
+      } else if (bookingData.specialist.includes('Дмитрий Иванов')) {
+        specialty = 'Стилист';
+      } else if (bookingData.specialist.includes('Екатерина Смирнова')) {
+        specialty = 'Мастер ногтевого сервиса';
       }
+      document.getElementById('specialistSpecialty').textContent = specialty;
+    }
 
-      // Услуги
-      const servicesList = document.getElementById('servicesList');
-      let total = 0;
-      if (bookingData.services && bookingData.services.length > 0) {
-        servicesList.innerHTML = '';
-        bookingData.services.forEach(service => {
-          const item = document.createElement('div');
-          item.className = 'service-item';
-          item.innerHTML = `
-            <span class="service-name">${service.title}</span>
-            <span class="service-price">${service.price.toLocaleString()} ₸</span>
-          `;
-          servicesList.appendChild(item);
-          total += service.price;
-        });
-      }
-      document.getElementById('servicesTotal').textContent = `${total.toLocaleString()} ₸`;
-      document.getElementById('finalTotal').textContent = `${total.toLocaleString()} ₸`;
-    });
+    // Дата и время
+    if (bookingData.date && bookingData.time) {
+      const date = new Date(bookingData.date);
+      const options = { weekday: 'long', day: 'numeric', month: 'long' };
+      const formattedDate = date.toLocaleDateString('ru-RU', options);
+      document.getElementById('appointmentDate').textContent = formattedDate;
+      document.getElementById('appointmentTime').textContent = bookingData.time;
+    }
 
-    // Отправка данных
-    document.getElementById('submitBtn').addEventListener('click', function () {
-      const userName = document.getElementById('userName').value.trim();
-      const userPhone = document.getElementById('userPhone').value.trim();
+    // Услуги
+    const servicesList = document.getElementById('servicesList');
+    let total = 0;
+    if (bookingData.services && bookingData.services.length > 0) {
+      servicesList.innerHTML = '';
+      bookingData.services.forEach(service => {
+        const item = document.createElement('div');
+        item.className = 'service-item';
+        item.innerHTML = `
+          <span class="service-name">${service.title}</span>
+          <span class="service-price">${service.price.toLocaleString()} ₸</span>
+        `;
+        servicesList.appendChild(item);
+        total += service.price;
+      });
+    }
+    document.getElementById('servicesTotal').textContent = `${total.toLocaleString()} ₸`;
+    document.getElementById('finalTotal').textContent = `${total.toLocaleString()} ₸`;
+  });
 
-      if (!userName || !userPhone) {
-        alert('Пожалуйста, заполните обязательные поля: Имя и Телефон');
-        return;
-      }
+  // Отправка данных
+  document.getElementById('submitBtn').addEventListener('click', function () {
+    const userName = document.getElementById('userName').value.trim();
+    const userPhone = document.getElementById('userPhone').value.trim();
 
-      const userEmail = document.getElementById('userEmail').value.trim();
-      const userComment = document.getElementById('userComment').value.trim();
+    if (!userName || !userPhone) {
+      alert('Пожалуйста, заполните обязательные поля: Имя и Телефон');
+      return;
+    }
 
-      const bookingData = JSON.parse(localStorage.getItem('currentBooking') || '{}');
+    const userEmail = document.getElementById('userEmail').value.trim();
+    const userComment = document.getElementById('userComment').value.trim();
 
-      // Telegram WebApp send
-      Telegram.WebApp.sendData(JSON.stringify({
-        date: bookingData.date,
-        time: bookingData.time,
-        specialist: bookingData.specialist,
-        services: bookingData.services,
-        name: userName,
-        phone: userPhone,
-        email: userEmail,
-        comment: userComment,
-        branch: "BROS & BLADES АL"
-      }));
+    Telegram.WebApp.sendData(JSON.stringify({
+      date: bookingData.date,
+      time: bookingData.time,
+      specialist: bookingData.specialist,
+      services: bookingData.services,
+      name: userName,
+      phone: userPhone,
+      email: userEmail,
+      comment: userComment,
+      branch: "BROS & BLADES АL"
+    }));
 
-      Telegram.WebApp.close();
-    });
-  </script>
+    Telegram.WebApp.close();
+  });
+</script>
+
 </body>
 </html>

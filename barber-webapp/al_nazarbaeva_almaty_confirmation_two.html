@@ -447,25 +447,35 @@
 
       // Handle form submission
       document.querySelector('.submit-button').addEventListener('click', function() {
-  const userName = document.getElementById('userName').value;
-  const userPhone = document.getElementById('userPhone').value;
+        const userName = document.getElementById('userName').value;
+        const userPhone = document.getElementById('userPhone').value;
 
-  if (!userName || !userPhone) {
-    alert('Пожалуйста, заполните обязательные поля (Имя и Телефон)');
-    return;
-  }
+        if (!userName || !userPhone) {
+          alert('Пожалуйста, заполните обязательные поля (Имя и Телефон)');
+          return;
+        }
 
-  // Отправляем данные в Telegram WebApp
-  Telegram.WebApp.sendData(JSON.stringify({
-    date: bookingData.date,
-    time: bookingData.time,
-    specialist: bookingData.specialist,
-    branch: "BROS & BLADES АL"
-  }));
+        // Prepare data to send
+        const bookingDetails = {
+          ...bookingData,
+          user: {
+            name: userName,
+            phone: userPhone,
+            email: document.getElementById('userEmail').value,
+            comment: document.getElementById('userComment').value
+          }
+        };
 
-  Telegram.WebApp.close();
-});
+        // Here you would typically send this data to your server
+        console.log('Booking details:', bookingDetails);
 
+        // For demo purposes, just show a success message
+        alert('Ваша запись успешно оформлена!');
+
+        // Redirect or close the web app
+        // window.location.href = 'success.html';
+      });
+    });
   </script>
 </body>
 </html>
