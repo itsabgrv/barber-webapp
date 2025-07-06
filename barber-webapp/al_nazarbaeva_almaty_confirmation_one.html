@@ -389,12 +389,15 @@
   <button class="submit-button" id="submitBtn">Записаться</button>
 
 <script>
-  let bookingData = {}; // доступна глобально
+  let bookingData = {}; // глобально
 
   document.addEventListener('DOMContentLoaded', function () {
-    Telegram.WebApp.ready();
+  Telegram.WebApp.ready();
 
-    bookingData = JSON.parse(localStorage.getItem('currentBooking') || '{}');
+  bookingData = JSON.parse(localStorage.getItem('currentBooking') || '{}');
+
+  const telegramUserId = localStorage.getItem('user_id');
+  bookingData.telegramUserId = telegramUserId;
 
     // Специалист
     if (bookingData.specialist) {
@@ -451,8 +454,7 @@
     document.getElementById('finalTotal').textContent = `${total.toLocaleString()} ₸`;
   });
 
-  // Отправка данных
-  document.getElementById('submitBtn').addEventListener('click', async function() {
+  document.getElementById('submitBtn').addEventListener('click', async function () {
     const userName = document.getElementById('userName').value.trim();
     const userPhone = document.getElementById('userPhone').value.trim();
 
@@ -461,35 +463,56 @@
       return;
     }
 
+    const data = {
+      date: bookingData.date,
+      time: bookingData.time,
+      specialist: bookingData.specialist,
+      services: bookingData.services,
+      name: userName,
+      phone: userPhone,
+      email: document.getElementById('userEmail').value.trim(),
+      comment: document.getElementById('userComment').value.trim(),
+      branch: bookingData.branch,
+      user_id: bookingData.telegramUserId || ""
+    };
+
     try {
-      const data = {
-        date: bookingData.date,
-        time: bookingData.time,
-        specialist: bookingData.specialist,
-        services: bookingData.services,
-        name: userName,
-        phone: userPhone,
-        email: document.getElementById('userEmail').value.trim(),
-        comment: document.getElementById('userComment').value.trim(),
-        branch: bookingData.branch
-      };
+      // ✅ Отправка в Supabase
+      const res = await fetch("https://okepiftwlqymibftguid.supabase.co/rest/v1/bookings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": "sb_publishable_ZIgcmEm2N-K_okvealeGSA_TAy78lNy",
+          "Authorization": "Bearer sb_publishable_ZIgcmEm2N-K_okvealeGSA_TAy78lNy",
+          "Prefer": "return=representation"
+        },
+        body: JSON.stringify(data)
+      });
 
-      console.log("✅ Отправляемые данные:", data);
-      alert("Отправка началась");
+      if (!res.ok) throw new Error("Ошибка при отправке в Supabase");
 
-      Telegram.WebApp.sendData(JSON.stringify(data)); // ← Только один вызов!
+      // ✅ Отправка уведомления через Render-сервер
+      await fetch("https://barber-server-yuhr.onrender.com/notify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: data.user_id,
+          name: data.name,
+          date: data.date,
+          time: data.time,
+          specialist: data.specialist
+        })
+      });
 
-      setTimeout(() => {
-        Telegram.WebApp.close();
-      }, 3000);
+      alert("✅ Запись успешно создана!");
+      Telegram.WebApp.close();
 
     } catch (error) {
-      console.error("❌ Ошибка при отправке данных:", error);
-      alert("Произошла ошибка при отправке данных");
+      console.error("❌ Ошибка:", error);
+      alert("Ошибка при записи. Попробуйте позже.");
     }
   });
 </script>
-
 
 </body>
 </html>
