@@ -71,24 +71,14 @@
   </div>
 
   <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const urlParams = new URLSearchParams(window.location.search);
-    const telegramUserId = urlParams.get('user_id');
-
-    if (telegramUserId) {
-      localStorage.setItem('telegramUserId', telegramUserId);
-    }
-
     document.getElementById('chooseCityBtn').addEventListener('click', function () {
       const page = document.getElementById('mainPage');
       page.classList.add('slide-up');
 
       setTimeout(() => {
         window.location.href = 'city.html';
-      }, 400);
+      }, 400); // время должно совпадать с CSS transition
     });
-  });
-</script>
-
+  </script>
 </body>
 </html>

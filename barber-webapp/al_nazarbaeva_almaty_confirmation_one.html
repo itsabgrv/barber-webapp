@@ -392,12 +392,13 @@
   let bookingData = {}; // глобально
 
   document.addEventListener('DOMContentLoaded', function () {
-  Telegram.WebApp.ready();
+    Telegram.WebApp.ready();
 
-  bookingData = JSON.parse(localStorage.getItem('currentBooking') || '{}');
+    bookingData = JSON.parse(localStorage.getItem('currentBooking') || '{}');
 
-  const telegramUserId = localStorage.getItem('user_id');
-  bookingData.telegramUserId = telegramUserId;
+    const urlParams = new URLSearchParams(window.location.search);
+    const telegramUserId = urlParams.get("user_id");
+    bookingData.telegramUserId = telegramUserId;
 
     // Специалист
     if (bookingData.specialist) {

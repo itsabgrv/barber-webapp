@@ -111,41 +111,28 @@
   </div>
 
   <script>
-  // Плавное появление
-  window.addEventListener('DOMContentLoaded', () => {
-    requestAnimationFrame(() => {
-      document.body.classList.add('page-loaded');
-    });
-
-    // Сохраняем user_id из URL, если есть
-    const params = new URLSearchParams(window.location.search);
-    const userId = params.get("user_id");
-    if (userId) {
-      localStorage.setItem("user_id", userId);
-    }
-  });
-
-  // Плавное исчезновение + передача user_id дальше
-  function fadeOut(callback) {
-    document.body.classList.remove('page-loaded');
-    setTimeout(callback, 400);
-  }
-
-  function withUserId(url) {
-    const userId = localStorage.getItem("user_id");
-    return userId ? `${url}?user_id=${userId}` : url;
-  }
-
-  // Перепиши переходы с user_id
-  document.querySelectorAll('.select-button').forEach((btn, i) => {
-    btn.addEventListener('click', () => {
-      const urls = ['almaty_abai.html', 'al_almaty_nazarbaeva.html'];
-      fadeOut(() => {
-        location.href = withUserId(urls[i]);
+    // Плавное появление
+    window.addEventListener('DOMContentLoaded', () => {
+      requestAnimationFrame(() => {
+        document.body.classList.add('page-loaded');
       });
     });
-  });
-</script>
 
+    // Плавное исчезновение
+    function fadeOut(callback) {
+      document.body.classList.remove('page-loaded');
+      setTimeout(callback, 400); // время = transition
+    }
+
+    function chooseBranch(branch) {
+      const data = JSON.stringify({ branch });
+      if (window.Telegram && Telegram.WebApp) {
+        Telegram.WebApp.sendData(data);
+        Telegram.WebApp.close();
+      } else {
+        alert("WebApp API не найден.");
+      }
+    }
+  </script>
 </body>
 </html>

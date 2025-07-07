@@ -92,33 +92,18 @@
   </div>
 
   <script>
-  window.addEventListener('DOMContentLoaded', () => {
-    requestAnimationFrame(() => {
-      document.body.classList.add('page-loaded');
+    // Плавное появление с задержкой в один кадр
+    window.addEventListener('DOMContentLoaded', () => {
+      requestAnimationFrame(() => {
+        document.body.classList.add('page-loaded');
+      });
     });
-  });
 
-  function fadeOut(callback) {
-    document.body.classList.remove('page-loaded');
-    setTimeout(callback, 400);
-  }
-
-  // Получаем user_id из localStorage
-  const telegramUserId = localStorage.getItem("telegramUserId") || "";
-
-  // Переход с передачей user_id
-  document.querySelector(".city-card:nth-child(2)").onclick = () => {
-    fadeOut(() => {
-      location.href = `almaty_filial.html?user_id=${telegramUserId}`;
-    });
-  };
-
-  document.querySelector(".city-card:nth-child(3)").onclick = () => {
-    fadeOut(() => {
-      location.href = `as_astana_filial.html?user_id=${telegramUserId}`;
-    });
-  };
-</script>
-
+    // Плавное исчезновение перед переходом
+    function fadeOut(callback) {
+      document.body.classList.remove('page-loaded');
+      setTimeout(callback, 400);
+    }
+  </script>
 </body>
 </html>
